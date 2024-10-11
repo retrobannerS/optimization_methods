@@ -7,7 +7,8 @@ args = [
     # "--citeproc",                                             # включить обработку цитирований, нужно указать bibliography
 ]
 preambles = [
-    "graphics.tex"
+    "graphics.tex",
+    "math.tex",
 ]
 
 [metadata.general]
@@ -23,7 +24,7 @@ lang = "ru"
 [metadata.layout]
 # block-headings = true                                                      # изменяет поведение заголовков, см. документацию т.к. есть подводные камни
 # classoption = "a4paper, 12pt, ..."                                         # опции класса документа
-documentclass = "scrreprt"                                                   # параметр класса документа(scrartcl, scrbook или scrreprt), если book или report(scrbook или scrreport), то включить параметр book 
+documentclass = "scrbook"                                                   # параметр класса документа(scrartcl, scrbook или scrreprt), если book или report(scrbook или scrreport), то включить параметр book 
 geometry = "left=2cm, right=2cm, top=2cm, bottom=2cm, footskip=5cm"          # поля страницы
 # hyperrefoptions = "linktoc=all, pdfwindowui, pdfpagemode=FullScreen, ..."  # опции гиперссылок
 indent = true                                                                # отступы в абзацах
@@ -90,7 +91,7 @@ urlstyle = "same"        # стиль ссылок на URL (same, tt, rm, sf)
 # lot = true             # включить список таблиц
 # thanks = true          # включить благодарности
 toc = true               # включить оглавление
-toc-depth = 2            # глубина оглавления
+toc-depth = 3            # глубина оглавления
 
 [metadata.bibliography]
 # biblatexoptions = []               # опции для пакета biblatex
@@ -117,7 +118,7 @@ logo-width = "35mm"                         # ширина логотипа
 # page-background-opacity = 0.5             # прозрачность фона
 
 [metadata.template.toc]
-toc-own-page = true                         # оглавление на отдельной странице
+# toc-own-page = true                       # оглавление на отдельной странице
 
 [metadata.template.figure]
 # float-placement-figure = "H"              # местоположение рисунков
@@ -126,7 +127,7 @@ toc-own-page = true                         # оглавление на отде
 # table-use-row-colors = true               # использовать цвета строк в таблицах
 
 [metadata.template.listings]
-listings-no-page-break = true               # запрет разрыва страниц в блоках кода
+listings-no-page-break = false               # запрет разрыва страниц в блоках кода
 listings-disable-line-numbers = true        # отключение нумерации строк в блоках кода
 # code-block-font-size = "footnotesize"     # размер шрифта в блоках кода
 
