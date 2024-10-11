@@ -2,7 +2,6 @@ import os
 import shutil
 import tomllib
 from parser import write_yaml, write_template
-from image_optimizer import optimize_images
 
 # Change the current working directory to the root of the project
 os.chdir(os.path.join(os.path.dirname(__file__), ".."))

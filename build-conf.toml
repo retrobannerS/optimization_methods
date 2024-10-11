@@ -1,8 +1,3 @@
-[image-optimization]
-enabled  = true
-quality  = 95
-max-size = 1500
-
 [pandoc]
 args = [
     "--pdf-engine=xelatex",                                     # использовать XeLaTeX как PDF-движок
@@ -16,10 +11,10 @@ preambles = [
 ]
 
 [metadata.general]
-title = "Название документа"
+title = "Отчет по курсу «Методы оптимизации»"
 # subtitle = ""
 # abstract = ""
-author = ["автор"]
+author = ["Баранов А. Т."]
 date = "осень 2024"
 lang = "ru"
 
