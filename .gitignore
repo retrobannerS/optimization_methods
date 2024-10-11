@@ -1,0 +1,6 @@
+.venv
+.DS_Store
+out
+tmp
+__pycache__
+.latex_tmp_files
