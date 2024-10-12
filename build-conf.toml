@@ -9,6 +9,7 @@ args = [
 preambles = [
     "graphics.tex",
     "math.tex",
+    "colors.tex"
 ]
 
 [metadata.general]
