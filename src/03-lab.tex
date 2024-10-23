@@ -1,0 +1,46 @@
+\section{Задание №3(Вариант 51)}
+\subsection{Условие}
+
+Составить и решить геометрически и сиплекс-методом задачу, двойственную данной:
+\begin{align*}
+    &F = 3x_1 + x_2 \to \max\\
+    &\begin{cases}
+        2x_1 + x_2 \leq 2\\
+        -x_1 + 3x_2 \leq 3\\
+        x_1 \geq 0, x_2 \geq 0
+    \end{cases}
+\end{align*}
+
+\subsection{Составление двойственной задачи}
+Согласно лабораторной работе №\pageref{01-lab-a}, пункт А, мы нашли решение этой прямой задачи:
+\begin{align*}
+    \max F(x_1, x_2) = 3, \argmax F(x_1, x_2) = (1, 1);\\
+    \min F(x_1, x_2) = 0, \argmin F(x_1, x_2) = (1, 0);
+\end{align*} 
+
+Поэтому, по коэффициентам в системе и по определению, составляем задачу, двойственную данной:
+\begin{align*}
+    &F^{*} = 2y_1 + 3y_2 \to \min\\
+    &\begin{cases}
+        2y_1 - y_2 \geq 3\\
+        y_1 + 3y_2 \geq 1\\
+        y_1 \geq 0\\
+        y_2 \geq 0
+    \end{cases}
+\end{align*}
+
+\subsection{Решение двойственной задачи по второй теореме двойственности}
+
+\begin{theorem}{Вторая теорема двойственности}\end{theorem}
+
+\begin{align*}
+    \mathbf{x^{ *}} = (x_{ 1}^{ *} , x_{ 2}^{ *} , \dots , x_{ n}^{ *}) \text{ и } \mathbf{y^{ *}} = (y_{ 1}^{ *} , y_{ 2}^{ *} , \dots , y_{ n}^{ *}) &\text{--- оптимальные решения прямой}\\
+    \text{и двойственной задач}
+    &\Leftrightarrow
+    \begin{aligned}
+        &\left(\sum_{j = 1}^{n} a_{ ij} x_{ j}^{ *} - b_{ i}\right)y_{ i}^{ *} = 0 \ \forall i = \overline{1, m}; \\
+        &\left(\sum_{i=1}^{n} a_{ ij} y_{ i}^{ *} - c_{ j}\right)x_{ j}^{ *} = 0 \ \forall j = \overline{1, n};
+    \end{aligned}
+\end{align*}
+
+В лабораторной работе №\pageref{02-lab-a}
