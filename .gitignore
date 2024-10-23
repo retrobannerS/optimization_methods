@@ -4,3 +4,4 @@ out
 tmp
 __pycache__
 .latex_tmp_files
+src/template
