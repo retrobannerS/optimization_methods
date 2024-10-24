@@ -54,7 +54,7 @@ ax.plot(X, line2, label=r"$x_2 = \frac{1}{3}x_1 + 1$")
 ax.plot(line3, X, label=r"$x_1 = 0$")
 ax.plot(X, line4, label=r"$x_2 = 0$")
 ax.fill_between(
-    X, line1, -1, color="blue", alpha=0.2, label="Область $x_2 \leq -2x_1 + 2$"
+    X, line1, -1, color="blue", alpha=0.2, label=r"Область $x_2 \leq -2x_1 + 2$"
 )
 ax.fill_between(
     X,
