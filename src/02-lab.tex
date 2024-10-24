@@ -1,4 +1,4 @@
-\section{Задание №2(Вариант 51)}
+\section{Задание №2(Вариант 51)}\label{02-lab}
 
 \subsection{Условие}
 
@@ -11,14 +11,14 @@
         -x_1 + 3x_2 \leq 3\\
         x_1 \geq 0\\
         x_2 \geq 0
-    \end{cases}\tag{А}\label{Условие задания 2 пункт А}\\
+    \end{cases}\tag{А}\label{02-lab-condition-a}\\
     F(x_1, x_2) = 3x_1 + x_2 \to \max(\min)\ \text{при условии} &
     \begin{cases}
         x_1 - 3x_2 \leq 2 \\
         x_1 + x_2 \geq 10 \\
         x_1 \geq 0 \\
         x_2 \geq 0
-    \end{cases}\tag{Б}\label{Условие задания 2 пункт Б}\\
+    \end{cases}\tag{Б}\label{02-lab-condition-b}\\
     F(x_1, x_2) = 3x_1 + x_2 \to \max\ \text{при условии} &
     \begin{cases}
         -x_1 + x_2 \geq 11\\
@@ -26,11 +26,11 @@
         x_1 \geq 0\\
         x_2 \geq 0
     \end{cases}\tag{В}
-    \label{Условие задания 2 пункт В}
+    \label{02-lab-condition-c}
 \end{align}
 
-\subsection{Решение}
-\subsubsection{Пункт \ref{Условие задания 2 пункт А}}
+\subsection{Решение}\label{02-lab-solution}
+\subsubsection{Пункт \ref{02-lab-condition-a}}\label{02-lab-a}
 
 Поставим задачу: наша компания продает товары А и Б. Количество продаж каждого товара - $x_1$ и $x_2$ соответственно.
 Прибыль компании, $F(x_1, x_2) = 3x_1 + x_2$, нужно максимизировать. При этом на изготовление каждого товара мы тратим ресурсы U и V.
@@ -140,7 +140,7 @@ $$F = -x_2 - \dfrac{3}{2}x_3 + 3 = -0 - \dfrac{3}{2} * 0 + 3 = 3 = \max F.\\ \ar
         \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-01-table}
+    \label{02-lab-01-table}
 \end{table}
 
 В данном случае нашу функцию можно представить как $F = 3x_1 + x_2$. Теперь становится ясно, за что отвечает отрицательный минимум.
@@ -162,7 +162,7 @@ $$F = -x_2 - \dfrac{3}{2}x_3 + 3 = -0 - \dfrac{3}{2} * 0 + 3 = 3 = \max F.\\ \ar
         \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-02-table}
+    \label{02-lab-02-table}
 \end{table}
 
 Теперь сделаем $x_1$ базисным:
@@ -182,7 +182,7 @@ $$F = -x_2 - \dfrac{3}{2}x_3 + 3 = -0 - \dfrac{3}{2} * 0 + 3 = 3 = \max F.\\ \ar
         \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-03-table}
+    \label{02-lab-03-table}
 \end{table}
 
 \begin{table}[H]
@@ -199,7 +199,7 @@ $$F = -x_2 - \dfrac{3}{2}x_3 + 3 = -0 - \dfrac{3}{2} * 0 + 3 = 3 = \max F.\\ \ar
         \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-04-table}
+    \label{02-lab-04-table}
 \end{table}
 
 Таким образом выражение для нашей функции превратилось в $2F = -x_2 - 3x_3 + 6$ -- сравните с ответом выше.
@@ -216,11 +216,11 @@ $$F = -x_2 - \dfrac{3}{2}x_3 + 3 = -0 - \dfrac{3}{2} * 0 + 3 = 3 = \max F.\\ \ar
 
 $\max F(x_1, x_2) = 3$, $\argmax F(x_1, x_2) = (1, 0)$, т.к. $x_1 = 1, x_2 = 0$ из строки выше.
 
-\textbf{Ответ:} $\max F(x_1, x_2) = 3$, $\argmax F(x_1, x_2) = (1, 0)$
+\textbf{Ответ:} $\max F(x_1, x_2) = 3$, $\argmax F(x_1, x_2) = (1, 0)$ \label{02-lab-a-answer}
 
 Далее решение будет идти без подробностей.
 
-\subsubsection{Пункт \ref{Условие задания 2 пункт Б}}
+\subsubsection{Пункт \ref{02-lab-condition-b}} \label{02-lab-b}
 
 Приведем задачу к каноническому виду(для $max$), путём введения базиса $x_3, x_4$:
 
@@ -255,7 +255,7 @@ $\max F(x_1, x_2) = 3$, $\argmax F(x_1, x_2) = (1, 0)$, т.к. $x_1 = 1, x_2 = 0
         ~ & F & -3 \leftarrow min & -1 & 0 & 0 & 0 & ~ \\ \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-05-table}
+    \label{02-lab-05-table}
 \end{table}
 
 \begin{table}[H]
@@ -269,7 +269,7 @@ $\max F(x_1, x_2) = 3$, $\argmax F(x_1, x_2) = (1, 0)$, т.к. $x_1 = 1, x_2 = 0
         ~ & F & 0 & -10 \leftarrow min & 3  & 0 & 9 & ~ \\ \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-06-table}
+    \label{02-lab-06-table}
 \end{table}
 
 \begin{table}[H]
@@ -283,7 +283,7 @@ $\max F(x_1, x_2) = 3$, $\argmax F(x_1, x_2) = (1, 0)$, т.к. $x_1 = 1, x_2 = 0
         \textbf{*2} & 2F & 0 & -20 \leftarrow min & 6 & 0 & 18 & ~ \\ \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-07-table}
+    \label{02-lab-07-table}
 \end{table}
 
 \begin{table}[H]
@@ -296,14 +296,14 @@ $\max F(x_1, x_2) = 3$, $\argmax F(x_1, x_2) = (1, 0)$, т.к. $x_1 = 1, x_2 = 0
          & 2F & 0 & 0 & 1 & -5 \leftarrow min & 53 & ~ \\ \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-08-table}
+    \label{02-lab-08-table}
 \end{table}
 
 Так как мы пришли к выражению $2F = -x_3 + 5x_4 + 53$, 
 то мы должны максимизировать $x_4$, однако мы можем максимизировать его бесконечно,
 что означает неограниченность области определения.
 
-\textbf{Ответ:} $\max F(x_1, x_2) \notin \R, \argmax F(x_1, x_2) \notin \R^2$
+\textbf{Ответ:} $\max F(x_1, x_2) \notin \R, \argmax F(x_1, x_2) \notin \R^2$ \label{02-lab-b-max-answer}
 
 \paragraph{$F(x_1, x_2) \to \min$}
 
@@ -341,7 +341,7 @@ $\max F(x_1, x_2) = 3$, $\argmax F(x_1, x_2) = (1, 0)$, т.к. $x_1 = 1, x_2 = 0
          & G & 3 & 1 \leftarrow min & 0 & 0 & 0 & ~ \\ \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-09-table}
+    \label{02-lab-09-table}
 \end{table}
 
 \begin{table}[H]
@@ -355,7 +355,7 @@ $\max F(x_1, x_2) = 3$, $\argmax F(x_1, x_2) = (1, 0)$, т.к. $x_1 = 1, x_2 = 0
          & G & 3 & 1 \leftarrow min & 0 & 0 & 0 & ~ \\ \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-10-table}
+    \label{02-lab-10-table}
 \end{table}
 
 \begin{table}[H]
@@ -367,16 +367,17 @@ $\max F(x_1, x_2) = 3$, $\argmax F(x_1, x_2) = (1, 0)$, т.к. $x_1 = 1, x_2 = 0
          & $x_2$ & 1 & 1 & 0 & -1 & 10 & \\ \hline
          & G & 2 & 0 & 0 & 1 & -10 & Все > 0 \\ \hline
     \end{tabular}
-    \label{table:02-lab-11-table}
+    \caption{}
+    \label{02-lab-11-table}
 \end{table}
 
 Мы сместились в точку $x_1 = 0, x_2 = 10, x_3 = 33, x_4 = 0$. Она входит в область определения. Мы пришли к следующему выражению:
 $G = -2x_1 - x_4$. Мы привели $G \to \max$. А значит и $F = -G = 2x_1 + x_4 \to \min$.
-Мы знаем, что $\argmin F = (0, 10)$, тогда $\min F = F(0, 10) = 3 * 0 + 1 * 10 = 10$, что подтверждает геометрический способ решения: \ref{fig:01-lab-02-graphic}
+Мы знаем, что $\argmin F = (0, 10)$, тогда $\min F = F(0, 10) = 3 * 0 + 1 * 10 = 10$, что подтверждает \hyperref[01-lab-02-graphic]{геометрический способ решения} данного задания.
 
-\textbf{Ответ:} $\min F = 10, \argmin F = (0, 10)$
+\textbf{Ответ:} $\min F = 10, \argmin F = (0, 10)$\label{02-lab-b-min-answer}
 
-\subsubsection{Пункт \ref{Условие задания 2 пункт В}}
+\subsubsection{Пункт \ref{02-lab-condition-c}}\label{02-lab-c}
 
 Приведем задачу к каноническому виду(для $max$), путём введения базиса $x_3, x_4$:
 
@@ -411,7 +412,7 @@ $G = -2x_1 - x_4$. Мы привели $G \to \max$. А значит и $F = -G 
          & F & -3 \leftarrow min & -1 & 0 & 0 & 0 & ~ \\ \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-12-table}
+    \label{02-lab-12-table}
 \end{table}
 
 \begin{table}[H]
@@ -424,7 +425,7 @@ $G = -2x_1 - x_4$. Мы привели $G \to \max$. А значит и $F = -G 
          & F & 0 & -13 \leftarrow min & 0 & 3 & 24 & ~ \\ \hline
     \end{tabular}
     \caption{}
-    \label{table:02-lab-13-table}
+    \label{02-lab-13-table}
 \end{table}
 
 Мы сместились в точку (8, 0), максимизируя целевую функцию $F$ по $x_1$.
@@ -433,8 +434,8 @@ $G = -2x_1 - x_4$. Мы привели $G \to \max$. А значит и $F = -G 
 потому что $F$ по $x_2$ дальше не максимизируется.
 Отсюда вывод, что область определения функции пуста. Максимума функции, как и точки максимума не существует.
 
-Эту ситуацию наглядно показывает график \ref{fig:01-lab-03-graphic}.
+Эту ситуацию наглядно показывает \hyperref[01-lab-03-graphic]{график из задания №1}.
 
-\textbf{Ответ:} $\nexists\max F(x_1, x_2), \nexists\argmax F(x_1, x_2).$
+\textbf{Ответ:} $\nexists\max F(x_1, x_2), \nexists\argmax F(x_1, x_2).$ \label{02-lab-c-answer}
 
 \newpage
