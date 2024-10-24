@@ -24,7 +24,7 @@ lang = "ru"
 
 [metadata.layout]
 # block-headings = true                                                      # изменяет поведение заголовков, см. документацию т.к. есть подводные камни
-# classoption = "a4paper, 12pt, ..."                                         # опции класса документа
+classoption = ["oneside"]                                         # опции класса документа
 documentclass = "scrbook"                                                   # параметр класса документа(scrartcl, scrbook или scrreprt), если book или report(scrbook или scrreport), то включить параметр book 
 geometry = "left=2cm, right=2cm, top=2cm, bottom=2cm, footskip=5cm"          # поля страницы
 # hyperrefoptions = "linktoc=all, pdfwindowui, pdfpagemode=FullScreen, ..."  # опции гиперссылок
@@ -119,7 +119,7 @@ logo-width = "35mm"                         # ширина логотипа
 # page-background-opacity = 0.5             # прозрачность фона
 
 [metadata.template.toc]
-# toc-own-page = true                       # оглавление на отдельной странице
+toc-own-page = true                       # оглавление на отдельной странице
 
 [metadata.template.figure]
 # float-placement-figure = "H"              # местоположение рисунков
@@ -144,9 +144,9 @@ footnotes-pretty = true                     # настройка сносок
 # disable-header-and-footer = true          # отключение колонтитулов
 
 [metadata.template.header]
-header-left = '\thepage'    # левый верхний колонтитул: номер страницы
+header-left = '\rightmark'    # левый верхний колонтитул: номер страницы
 header-center = ''          # центральный верхний колонтитул: пустой
-header-right = '\rightmark' # правый верхний колонтитул: текущий раздел
+header-right = '\thepage' # правый верхний колонтитул: текущий раздел
 
 [metadata.template.footer]
 footer-left = ''            # левый нижний колонтитул: пустой

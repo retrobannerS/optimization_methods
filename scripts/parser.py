@@ -16,7 +16,7 @@ def write_yaml(conf, path_yaml):
 
                     # layout
                     "block-headings": conf["metadata"]["layout"]["block-headings"] if "block-headings" in conf["metadata"]["layout"] else None,
-                    "class-option": conf["metadata"]["layout"]["class-option"] if "class-option" in conf["metadata"]["layout"] else None,
+                    "classoption": conf["metadata"]["layout"]["classoption"] if "classoption" in conf["metadata"]["layout"] else None,
                     "documentclass": conf["metadata"]["layout"]["documentclass"] if "documentclass" in conf["metadata"]["layout"] else None,
                     "geometry": conf["metadata"]["layout"]["geometry"] if "geometry" in conf["metadata"]["layout"] else None,
                     "hyperrefoptions": conf["metadata"]["layout"]["hyperrefoptions"] if "hyperrefoptions" in conf["metadata"]["layout"] else None,
