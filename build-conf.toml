@@ -11,7 +11,8 @@ preambles = [
     "math.tex",
     "colors.tex",
     "listings.tex",
-    "headers.tex"
+    "headers.tex",
+    "tables.tex",
 ]
 
 [metadata.general]

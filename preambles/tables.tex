@@ -1,0 +1,21 @@
+\usepackage{diagbox}
+\usepackage{cancel}
+
+\newcommand{\doublecell}[2]{
+    #1
+    \makebox[2ex][r]{\raisebox{1.5ex}[0pt][0pt] {\scriptsize\textcolor{blue}{#2}}}
+}
+
+\newcommand{\firstmarkedcell}[1]{
+    \cellcolor{myorangecolor}
+    \makebox[0pt][r]{\raisebox{-1ex}[0pt][0pt] {$\oplus$}}
+    $-$
+    \makebox[2ex][r]{\raisebox{1.5ex}[0pt][0pt] {\scriptsize\textcolor{blue}{#1}}}
+}
+
+\newcommand{\othermarkedcell}[3]{
+    \cellcolor{mycolumncolor}
+    \makebox[0pt][r]{\raisebox{-1ex}[0pt][0pt] {#3}}
+    #1
+    \makebox[2ex][r]{\raisebox{1.5ex}[0pt][0pt] {\scriptsize\textcolor{blue}{#2}}}
+}
