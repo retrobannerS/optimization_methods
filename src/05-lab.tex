@@ -1,0 +1,566 @@
+\section{Задание №5}
+
+\subsection{Условие}\label{05-lab-condition}
+
+Придумать транспортную задачу закрытого типа со следующими ограничениями:
+\begin{enumerate}
+    \item Размерность $5 \times 4$.
+    \item Запасы и потребности в диапазоне от 10 до 200.
+    \item Стоимость поставок от 1 до 9.
+\end{enumerate}
+
+Найти начальное опорное решение методом северо-западного угла и методом минимальных элементов.
+Понравившийся метод использовать для решения задачи методом потенциалов.
+Если в методе потенциалов сразу получилось оптимальное решение, то взять другую таблицу в качестве начального опорного решения.
+
+\subsection{Постановка задачи}\label{05-lab-statement}
+
+%% Запасы на складах: [170, 65, 115, 130, 140]
+%% Потребности магазинов: [195, 190, 135, 100]
+%% Стоимость поставок:  [[7, 4, 8, 8], [7, 3, 7, 8], [5, 4, 8, 8], [3, 6, 5, 2], [8, 6, 2, 5]]
+
+\begin{enumerate}
+    \item Запасы на 5 складах: $\begin{pmatrix}
+                  170 & 65 & 115 & 130 & 140
+              \end{pmatrix}$
+    \item Потребности 4 магазинов: $\begin{pmatrix}
+                  195 & 190 & 135 & 100
+              \end{pmatrix}$
+    \item Стоимость поставок: $\begin{pmatrix}
+                  7 & 4 & 8 & 8 \\
+                  7 & 3 & 7 & 8 \\
+                  5 & 4 & 8 & 8 \\
+                  3 & 6 & 5 & 2 \\
+                  8 & 6 & 2 & 5
+              \end{pmatrix}$
+\end{enumerate}
+
+\subsection{Решение}\label{05-lab-solution}
+
+\subsubsection{Метод северо-западного угла}\label{05-lab-nw-corner}
+
+Начнём с пустой таблицы, где в уголочках запишем стоимость поставок.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \backslashbox{Склад}{Магазин} & 1                & 2                & 3                & 4                & Запас              \\
+        \hline
+        1                             & \doublecell{}{7} & \doublecell{}{4} & \doublecell{}{8} & \doublecell{}{8} & 170                \\
+        \hline
+        2                             & \doublecell{}{7} & \doublecell{}{3} & \doublecell{}{7} & \doublecell{}{8} & 65                 \\
+        \hline
+        3                             & \doublecell{}{5} & \doublecell{}{4} & \doublecell{}{8} & \doublecell{}{8} & 115                \\
+        \hline
+        4                             & \doublecell{}{3} & \doublecell{}{6} & \doublecell{}{5} & \doublecell{}{2} & 130                \\
+        \hline
+        5                             & \doublecell{}{8} & \doublecell{}{6} & \doublecell{}{2} & \doublecell{}{5} & 140                \\
+        \hline
+        Потребность                   & 195              & 190              & 135              & 100              & \diagbox{620}{620} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Заполним таблицу по методу северо-западного угла. Начинаем с клетки $(1, 1)$,
+заполняем её на $x_{11} = \min(170, 195) = 170$,
+вычитаем из запаса на складе и из потребности магазина это значение,
+проставляем '--' там, где образовался ноль.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \backslashbox{Склад}{Магазин} & 1                   & 2                   & 3                   & 4                   & Запас              \\
+        \hline
+        1                             & \doublecell{170}{7} & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} & \cancel{170} 0     \\
+        \hline
+        2                             & \doublecell{}{7}    & \doublecell{}{3}    & \doublecell{}{7}    & \doublecell{}{8}    & 65                 \\
+        \hline
+        3                             & \doublecell{}{5}    & \doublecell{}{4}    & \doublecell{}{8}    & \doublecell{}{8}    & 115                \\
+        \hline
+        4                             & \doublecell{}{3}    & \doublecell{}{6}    & \doublecell{}{5}    & \doublecell{}{2}    & 130                \\
+        \hline
+        5                             & \doublecell{}{8}    & \doublecell{}{6}    & \doublecell{}{2}    & \doublecell{}{5}    & 140                \\
+        \hline
+        Потребность                   & \cancel{195} 25     & 190                 & 135                 & 100                 & \diagbox{450}{450} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Следующую итерацию начнём снова с левой верхней клетки, в данном случае $(2, 1)$,
+заполним её на $x_{21} = \min(65, 25) = 25$,
+вычтем из запаса на складе и из потребности магазина это значение,
+проставим '--' там, где образовался ноль.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \backslashbox{Склад}{Магазин} & 1                          & 2                   & 3                   & 4                   & Запас              \\
+        \hline
+        1                             & \doublecell{170}{7}        & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} & \cancel{170} 0     \\
+        \hline
+        2                             & \doublecell{25}{7}         & \doublecell{}{3}    & \doublecell{}{7}    & \doublecell{}{8}    & \cancel{65} 40     \\
+        \hline
+        3                             & \doublecell{$-$}{5}        & \doublecell{}{4}    & \doublecell{}{8}    & \doublecell{}{8}    & 115                \\
+        \hline
+        4                             & \doublecell{$-$}{3}        & \doublecell{}{6}    & \doublecell{}{5}    & \doublecell{}{2}    & 130                \\
+        \hline
+        5                             & \doublecell{$-$}{8}        & \doublecell{}{6}    & \doublecell{}{2}    & \doublecell{}{5}    & 140                \\
+        \hline
+        Потребность                   & \cancel{170} \cancel{25} 0 & 190                 & 135                 & 100                 & \diagbox{425}{425} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Следующая итерация:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \backslashbox{Склад}{Магазин} & 1                          & 2                   & 3                   & 4                   & Запас                     \\
+        \hline
+        1                             & \doublecell{170}{7}        & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} & \cancel{170} 0            \\
+        \hline
+        2                             & \doublecell{25}{7}         & \doublecell{40}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} & \cancel{65} \cancel{40} 0 \\
+        \hline
+        3                             & \doublecell{$-$}{5}        & \doublecell{}{4}    & \doublecell{}{8}    & \doublecell{}{8}    & 115                       \\
+        \hline
+        4                             & \doublecell{$-$}{3}        & \doublecell{}{6}    & \doublecell{}{5}    & \doublecell{}{2}    & 130                       \\
+        \hline
+        5                             & \doublecell{$-$}{8}        & \doublecell{}{6}    & \doublecell{}{2}    & \doublecell{}{5}    & 140                       \\
+        \hline
+        Потребность                   & \cancel{170} \cancel{25} 0 & \cancel{190} 150    & 135                 & 100                 & \diagbox{390}{390}        \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Делаем данные итерации, пока не заполним всю таблицу. Готовая таблица:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \backslashbox{Склад}{Магазин} & 1                   & 2                   & 3                   & 4                   & Запас          \\
+        \hline
+        1                             & \doublecell{170}{7} & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} & 0              \\
+        \hline
+        2                             & \doublecell{25}{7}  & \doublecell{40}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} & 0              \\
+        \hline
+        3                             & \doublecell{$-$}{5} & \doublecell{115}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} & 0              \\
+        \hline
+        4                             & \doublecell{$-$}{3} & \doublecell{35}{6}  & \doublecell{95}{5}  & \doublecell{$-$}{2} & 0              \\
+        \hline
+        5                             & \doublecell{$-$}{8} & \doublecell{$-$}{6} & \doublecell{40}{2}  & \doublecell{100}{5} & 0              \\
+        \hline
+        Потребность                   & 0                   & 0                   & 0                   & 0                   & \diagbox{0}{0} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Мы получили опорное решение, которое можно улучшить методом потенциалов.
+
+\subsubsection{Метод минимальных элементов}\label{05-lab-min}
+
+Начнём с пустой таблицы, где в уголочках запишем стоимость поставок.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \backslashbox{Склад}{Магазин} & 1                & 2                & 3                & 4                & Запас              \\
+        \hline
+        1                             & \doublecell{}{7} & \doublecell{}{4} & \doublecell{}{8} & \doublecell{}{8} & 170                \\
+        \hline
+        2                             & \doublecell{}{7} & \doublecell{}{3} & \doublecell{}{7} & \doublecell{}{8} & 65                 \\
+        \hline
+        3                             & \doublecell{}{5} & \doublecell{}{4} & \doublecell{}{8} & \doublecell{}{8} & 115                \\
+        \hline
+        4                             & \doublecell{}{3} & \doublecell{}{6} & \doublecell{}{5} & \doublecell{}{2} & 130                \\
+        \hline
+        5                             & \doublecell{}{8} & \doublecell{}{6} & \doublecell{}{2} & \doublecell{}{5} & 140                \\
+        \hline
+        Потребность                   & 195              & 190              & 135              & 100              & \diagbox{620}{620} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Смотрим на стоимости поставок и выбираем клетку, в которой стоимость минимальна. В данном случае это клетка $(4, 4)$,
+заполняем её на $x_{44} = \min(130, 100) = 100$, вычитаем из запаса на складе и из потребности магазина это значение,
+проставляем '--' там, где образовался ноль.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \backslashbox{Склад}{Магазин} & 1                & 2                & 3                & 4                   & Запас              \\
+        \hline
+        1                             & \doublecell{}{7} & \doublecell{}{4} & \doublecell{}{8} & \doublecell{$-$}{8} & 170                \\
+        \hline
+        2                             & \doublecell{}{7} & \doublecell{}{3} & \doublecell{}{7} & \doublecell{$-$}{8} & 65                 \\
+        \hline
+        3                             & \doublecell{}{5} & \doublecell{}{4} & \doublecell{}{8} & \doublecell{$-$}{8} & 115                \\
+        \hline
+        4                             & \doublecell{}{3} & \doublecell{}{6} & \doublecell{}{5} & \doublecell{100}{2} & \cancel{130} 30    \\
+        \hline
+        5                             & \doublecell{}{8} & \doublecell{}{6} & \doublecell{}{2} & \doublecell{$-$}{5} & 140                \\
+        \hline
+        Потребность                   & 195              & 190              & 135              & \cancel{100} 0      & \diagbox{520}{520} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Далее минимальная стоимость поставки в клетке $ (5, 3) $,
+заполняем её на $ x_{53} = \min(140, 135) = 135 $,
+вычитаем из запаса на складе и из потребности магазина это значение,
+проставляем '--' там, где образовался ноль.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \backslashbox{Склад}{Магазин} & 1                & 2                & 3                   & 4                   & Запас              \\
+        \hline
+        1                             & \doublecell{}{7} & \doublecell{}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} & 170                \\
+        \hline
+        2                             & \doublecell{}{7} & \doublecell{}{3} & \doublecell{$-$}{7} & \doublecell{$-$}{8} & 65                 \\
+        \hline
+        3                             & \doublecell{}{5} & \doublecell{}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} & 115                \\
+        \hline
+        4                             & \doublecell{}{3} & \doublecell{}{6} & \doublecell{$-$}{5} & \doublecell{100}{2} & \cancel{130} 30    \\
+        \hline
+        5                             & \doublecell{}{8} & \doublecell{}{6} & \doublecell{135}{2} & \doublecell{$-$}{5} & \cancel{140} 5     \\
+        \hline
+        Потребность                   & 195              & 190              & \cancel{135} 0      & \cancel{100} 0      & \diagbox{385}{385} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Следующая итерация:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \backslashbox{Склад}{Магазин} & 1                   & 2                  & 3                   & 4                   & Запас              \\
+        \hline
+        1                             & \doublecell{}{7}    & \doublecell{}{4}   & \doublecell{$-$}{8} & \doublecell{$-$}{8} & 170                \\
+        \hline
+        2                             & \doublecell{$-$}{7} & \doublecell{65}{3} & \doublecell{$-$}{7} & \doublecell{$-$}{8} & \cancel{65} 0      \\
+        \hline
+        3                             & \doublecell{}{5}    & \doublecell{}{4}   & \doublecell{$-$}{8} & \doublecell{$-$}{8} & 115                \\
+        \hline
+        4                             & \doublecell{}{3}    & \doublecell{}{6}   & \doublecell{$-$}{5} & \doublecell{100}{2} & \cancel{130} 30    \\
+        \hline
+        5                             & \doublecell{}{8}    & \doublecell{}{6}   & \doublecell{135}{2} & \doublecell{$-$}{5} & \cancel{140} 5     \\
+        \hline
+        Потребность                   & 195                 & \cancel{190} 125   & \cancel{135} 0      & \cancel{100} 0      & \diagbox{320}{320} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+И так далее пока не заполним всю таблицу. Готовая таблица:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \backslashbox{Склад}{Магазин} & 1                   & 2                   & 3                   & 4                   & Запас          \\
+        \hline
+        1                             & \doublecell{160}{7} & \doublecell{10}{4}  & \doublecell{$-$}{8} & \doublecell{$-$}{8} & 0              \\
+        \hline
+        2                             & \doublecell{$-$}{7} & \doublecell{65}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} & 0              \\
+        \hline
+        3                             & \doublecell{$-$}{5} & \doublecell{115}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} & 0              \\
+        \hline
+        4                             & \doublecell{30}{3}  & \doublecell{$-$}{6} & \doublecell{$-$}{5} & \doublecell{100}{2} & 0              \\
+        \hline
+        5                             & \doublecell{5}{8}   & \doublecell{$-$}{6} & \doublecell{135}{2} & \doublecell{$-$}{5} & 0              \\
+        \hline
+        Потребность                   & 0                   & 0                   & 0                   & 0                   & \diagbox{0}{0} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Мы получили опорное решение, которое можно улучшить методом потенциалов.
+
+\subsubsection{Метод потенциалов}\label{05-lab-potentials}
+
+Я буду использовать опорное решение, полученное \hyperref[05-lab-nw-corner]{методом северо-западного угла}.
+
+Опорное решение: $X_0 = \begin{pmatrix}
+        170 & 0   & 0  & 0   \\
+        25  & 40  & 0  & 0   \\
+        0   & 115 & 0  & 0   \\
+        0   & 35  & 95 & 0   \\
+        0   & 0   & 40 & 100
+    \end{pmatrix}$, значение целевой функции
+\[f(X_0) = 170 \cdot 7 + 25 \cdot 7 + 40 \cdot 3 + 115 \cdot 4 + 35 \cdot 6 + 95 \cdot 5 + 40 \cdot 2 + 100 \cdot 5 = 3210\]
+
+Элемент (клетка) называется \textbf{базисным}, если в нём написана цифра, а не прочерк. Элемент (клетка) называется \textbf{небазисным}, если в нём написан прочерк.
+
+Для каждой клетки введём переменные $u_i$ и $v_j$ --- потенциалы складов и магазинов соответственно.
+
+\textbf{Критерий оптимальности решения:} $\Delta_{ij} = u_i + v_j - c_{ij} \leq 0$, причём для базисного элемента $\Delta_{ij} = u_i + v_j - c_{ij} = 0$.
+
+Сначала нам нужно расставить потенциалы. Пусть $u_1 = 0$, тогда $v_1 = 7$.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \backslashbox{$u_i$}{$v_j$} & 7                   &                     &                     &                     \\
+        \hline
+        0                           & \doublecell{170}{7} & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{25}{7}  & \doublecell{40}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{$-$}{5} & \doublecell{115}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{$-$}{3} & \doublecell{35}{6}  & \doublecell{95}{5}  & \doublecell{$-$}{2} \\
+        \hline
+                                    & \doublecell{$-$}{8} & \doublecell{$-$}{6} & \doublecell{40}{2}  & \doublecell{100}{5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Базисных элементов в первой строке не осталось, переходим к первому столбцу.
+
+$v_1 = 7$, значит для второй строки должно выполняться $u_2 = 0$.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \backslashbox{$u_i$}{$v_j$} & 7                   &                     &                     &                     \\
+        \hline
+        0                           & \doublecell{170}{7} & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        0                           & \doublecell{25}{7}  & \doublecell{40}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{$-$}{5} & \doublecell{115}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{$-$}{3} & \doublecell{35}{6}  & \doublecell{95}{5}  & \doublecell{$-$}{2} \\
+        \hline
+                                    & \doublecell{$-$}{8} & \doublecell{$-$}{6} & \doublecell{40}{2}  & \doublecell{100}{5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Базисных элементов в первом столбце не осталось, переходим ко второй строке.
+
+$u_2 = 0$, значит для второго столбца должно выполняться $v_2 = 3$.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \backslashbox{$u_i$}{$v_j$} & 7                   & 3                   &                     &                     \\
+        \hline
+        0                           & \doublecell{170}{7} & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        0                           & \doublecell{25}{7}  & \doublecell{40}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{$-$}{5} & \doublecell{115}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{$-$}{3} & \doublecell{35}{6}  & \doublecell{95}{5}  & \doublecell{$-$}{2} \\
+        \hline
+                                    & \doublecell{$-$}{8} & \doublecell{$-$}{6} & \doublecell{40}{2}  & \doublecell{100}{5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Базисных элементов во второй строке не осталось, переходим ко второму столбцу. И так далее, пока потенциалы не будут расставлены.
+
+Конечная таблица с потенциалами:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \backslashbox{$u_i$}{$v_j$} & 7                   & 3                   & 2                   & 5                   \\
+        \hline
+        0                           & \doublecell{170}{7} & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        0                           & \doublecell{25}{7}  & \doublecell{40}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
+        \hline
+        1                           & \doublecell{$-$}{5} & \doublecell{115}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        3                           & \doublecell{$-$}{3} & \doublecell{35}{6}  & \doublecell{95}{5}  & \doublecell{$-$}{2} \\
+        \hline
+        0                           & \doublecell{$-$}{8} & \doublecell{$-$}{6} & \doublecell{40}{2}  & \doublecell{100}{5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Для базисных элементов критерий оптимальности выполняется. Теперь рассматриваем небазисные элементы.
+
+Например, для клетки $(3, 1)$ критерий не выполняется: $\Delta_{31} = u_3 + v_1 - c_{31} = 1 + 7 - 5 = 3 \nleq 0$.
+
+\textbf{Алгоритм перехода к более оптимальному плану:}
+
+\begin{enumerate}
+    \item Выбираем небазисный элемент, для которого критерий оптимальности не выполняется. Помечаем его знаком $\oplus$.
+    \item Строим цикл из четырёх клеток, включая помеченную клетку: 2 клетки в одном столбце и 2 клетки в одной строке, 3 базисных клетки и одна уже нами помеченная небазисная.
+          Помечаем клетки, чередуя знаки $\oplus$ и $\ominus$.
+    \item Находим $\theta = \min\{x_{ij} \mid \text{клетка } (i, j) \text{ помечена } \ominus\}$.
+    \item Считаем новое значение $f_{\text{нов}} = f_{\text{стар}} + \theta * \Delta_{ij}$, где $ij$ - та клетка, для которой не выполняется критерий оптимальности.
+    \item В новом оптимальном плане к клеткам, помеченным $\oplus$, прибавляем $\theta$, а из клеткок, помеченных $\ominus$, вычитается $\theta$.
+    \item \textbf{Одну} клетку, в которых значение стало равно нулю, делаем небазисной.
+\end{enumerate}
+
+Итак, выберем клетку $(3, 1)$ и пометим её $\oplus$. Строим цикл: $(3, 1) \to (2, 1) \to (2, 2) \to (3, 2) \to (3, 1)$, помечая их, чередуя $\oplus$ и $\ominus$.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \backslashbox{$u_i$}{$v_j$} & 7                                  & 3                                   & 2                   & 5                   \\
+        \hline
+        0                           & \doublecell{170}{7}                & \doublecell{$-$}{4}                 & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        0                           & \othermarkedcell{25}{7}{$\ominus$} & \othermarkedcell{40}{3}{$\oplus$}   & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
+        \hline
+        1                           & \firstmarkedcell{5}                & \othermarkedcell{115}{4}{$\ominus$} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        3                           & \doublecell{$\ominus$}{3}          & \doublecell{35}{6}                  & \doublecell{95}{5}  & \doublecell{$-$}{2} \\
+        \hline
+        0                           & \doublecell{$-$}{8}                & \doublecell{$-$}{6}                 & \doublecell{40}{2}  & \doublecell{100}{5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+При этом $\theta_1 = \min(x_{21}, x_{ 32}) = 25$
+
+Пересчитываем целевую функцию: $ f(X_1) = f(X_0) - \theta_1 \cdot \Delta_{31} = 3210 - 25 \cdot 3 = 3135$
+
+Новое опорное решение:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \backslashbox{$u_i$}{$v_j$} &                           &                     &                     &                     \\
+        \hline
+                                    & \doublecell{170}{7}       & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{$0 \to -$}{7} & \doublecell{65}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{25}{5}        & \doublecell{90}{4}  & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{$-$}{3}       & \doublecell{35}{6}  & \doublecell{95}{5}  & \doublecell{$-$}{2} \\
+        \hline
+                                    & \doublecell{$-$}{8}       & \doublecell{$-$}{6} & \doublecell{40}{2}  & \doublecell{100}{5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Потенциалы пересчитываются тем же образом:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \backslashbox{$u_i$}{$v_j$} & 7                   & 6                   & 5                   & 8                   \\
+        \hline
+        0                           & \doublecell{170}{7} & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        -3                          & \doublecell{$-$}{7} & \doublecell{65}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
+        \hline
+        -2                          & \doublecell{25}{5}  & \doublecell{90}{4}  & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        0                           & \doublecell{$-$}{3} & \doublecell{35}{6}  & \doublecell{95}{5}  & \doublecell{$-$}{2} \\
+        \hline
+        -3                          & \doublecell{$-$}{8} & \doublecell{$-$}{6} & \doublecell{40}{2}  & \doublecell{100}{5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Теперь для клетки $(1, 2)$ критерий не выполняется: $\Delta_{12} = u_1 + v_2 - c_{12} = 0 + 6 - 4 = 2 \nleq 0$.
+
+Построим цикл:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \backslashbox{$u_i$}{$v_j$} & 7                                   & 6                                  & 5                   & 8                   \\
+        \hline
+        0                           & \othermarkedcell{170}{7}{$\ominus$} & \firstmarkedcell{4}                & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        -3                          & \doublecell{$-$}{7}                 & \doublecell{65}{3}                 & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
+        \hline
+        -2                          & \othermarkedcell{25}{5}{$\oplus$}   & \othermarkedcell{90}{4}{$\ominus$} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        0                           & \doublecell{$-$}{3}                 & \doublecell{35}{6}                 & \doublecell{95}{5}  & \doublecell{$-$}{2} \\
+        \hline
+        -3                          & \doublecell{$-$}{8}                 & \doublecell{$-$}{6}                & \doublecell{40}{2}  & \doublecell{100}{5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+$\theta_2 = \min(x_{11}, x_{ 32}) = 90,\ f(X_2) = f(X_1) - \theta_2 \cdot \Delta_{12} = 3135 - 90 \cdot 2 = 2955$
+
+Новое опорное решение:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \backslashbox{$u_i$}{$v_j$} &                           &                     &                     &                     \\
+        \hline
+                                    & \doublecell{80}{7}        & \doublecell{90}{4}  & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{$-$}{7} & \doublecell{65}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{115}{5}       & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+                                    & \doublecell{$-$}{3}       & \doublecell{35}{6}  & \doublecell{95}{5}  & \doublecell{$-$}{2} \\
+        \hline
+                                    & \doublecell{$-$}{8}       & \doublecell{$-$}{6} & \doublecell{40}{2}  & \doublecell{100}{5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+И так далее. После нескольких итераций (семи штук в данном случае) получаем оптимальное решение:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \backslashbox{$u_i$}{$v_j$} & 7                   & 4                   & 3                   & 6                   \\
+        \hline
+        0                           & \doublecell{45}{7} & \doublecell{125}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        -1                          & \doublecell{$-$}{7} & \doublecell{65}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
+        \hline
+        -2                          & \doublecell{115}{5}  & \doublecell{$-$}{4}  & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        \hline
+        -4                           & \doublecell{35}{3} & \doublecell{$-$}{6}  & \doublecell{$-$}{5}  & \doublecell{95}{2} \\
+        \hline
+        -1                          & \doublecell{$-$}{8} & \doublecell{$-$}{6} & \doublecell{135}{2}  & \doublecell{5}{5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Здесь для всех клеток выполняется критерий оптимальности.
+
+Таким образом, оптимальное решение $X^* = X_7 = \begin{pmatrix}
+        45 & 125 & 0 & 0 \\
+        0  & 65  & 0 & 0 \\
+        115 & 0 & 0 & 0 \\
+        35 & 0 & 0 & 95 \\
+        0 & 0 & 135 & 5
+\end{pmatrix}$, при этом $f_{min} = f(X_7) = 2175$.
+
+\textbf{Ответ:} Оптимальное решение --- $X^* = \begin{pmatrix}
+        45 & 125 & 0 & 0 \\
+        0  & 65  & 0 & 0 \\
+        115 & 0 & 0 & 0 \\
+        35 & 0 & 0 & 95 \\
+        0 & 0 & 135 & 5
+\end{pmatrix}$, 
+
+минимум целевой функции --- $f_{min} = 2175$. \label{05-lab-answer}
