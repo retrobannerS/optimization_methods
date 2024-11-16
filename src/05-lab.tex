@@ -30,19 +30,19 @@
                   8 & 6 & 2 & 5
               \end{pmatrix}$
     \item Целевая функция: $f = 7x_{11} + 4x_{12} + 8x_{13} + 8x_{14} + 7x_{21} + 3x_{22} + 7x_{23} + 8x_{24} + 5x_{31} + 4x_{32} + 8x_{33} + 8x_{34} + 3x_{41} + 6x_{42} + 5x_{43} + 2x_{44} + 8x_{51} + 6x_{52} + 2x_{53} + 5x_{54} \to \min$
-    
+
     \item Ограничения:
-    \[\begin{cases}
-        x_{11} + x_{12} + x_{13} + x_{14} = 170 \\
-        x_{21} + x_{22} + x_{23} + x_{24} = 65 \\
-        x_{31} + x_{32} + x_{33} + x_{34} = 115 \\
-        x_{41} + x_{42} + x_{43} + x_{44} = 130 \\
-        x_{51} + x_{52} + x_{53} + x_{54} = 140 \\
-        x_{11} + x_{21} + x_{31} + x_{41} + x_{51} = 195 \\
-        x_{12} + x_{22} + x_{32} + x_{42} + x_{52} = 190 \\
-        x_{13} + x_{23} + x_{33} + x_{43} + x_{53} = 135 \\
-        x_{14} + x_{24} + x_{34} + x_{44} + x_{54} = 100 \\
-    \end{cases}\]
+          \[\begin{cases}
+                  x_{11} + x_{12} + x_{13} + x_{14} = 170          \\
+                  x_{21} + x_{22} + x_{23} + x_{24} = 65           \\
+                  x_{31} + x_{32} + x_{33} + x_{34} = 115          \\
+                  x_{41} + x_{42} + x_{43} + x_{44} = 130          \\
+                  x_{51} + x_{52} + x_{53} + x_{54} = 140          \\
+                  x_{11} + x_{21} + x_{31} + x_{41} + x_{51} = 195 \\
+                  x_{12} + x_{22} + x_{32} + x_{42} + x_{52} = 190 \\
+                  x_{13} + x_{23} + x_{33} + x_{43} + x_{53} = 135 \\
+                  x_{14} + x_{24} + x_{34} + x_{44} + x_{54} = 100 \\
+              \end{cases}\]
 \end{enumerate}
 
 \subsection{Решение}\label{05-lab-solution}
@@ -519,17 +519,17 @@ $\theta_2 = \min(x_{11}, x_{ 32}) = 90,\ f(X_2) = f(X_1) - \theta_2 \cdot \Delta
     \centering
     \begin{tabular}{|c|c|c|c|c|}
         \hline
-        \backslashbox{$u_i$}{$v_j$} &                           &                     &                     &                     \\
+        \backslashbox{$u_i$}{$v_j$} &                     &                     &                     &                     \\
         \hline
-                                    & \doublecell{80}{7}        & \doublecell{90}{4}  & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+                                    & \doublecell{80}{7}  & \doublecell{90}{4}  & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
         \hline
                                     & \doublecell{$-$}{7} & \doublecell{65}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
         \hline
-                                    & \doublecell{115}{5}       & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+                                    & \doublecell{115}{5} & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
         \hline
-                                    & \doublecell{$-$}{3}       & \doublecell{35}{6}  & \doublecell{95}{5}  & \doublecell{$-$}{2} \\
+                                    & \doublecell{$-$}{3} & \doublecell{35}{6}  & \doublecell{95}{5}  & \doublecell{$-$}{2} \\
         \hline
-                                    & \doublecell{$-$}{8}       & \doublecell{$-$}{6} & \doublecell{40}{2}  & \doublecell{100}{5} \\
+                                    & \doublecell{$-$}{8} & \doublecell{$-$}{6} & \doublecell{40}{2}  & \doublecell{100}{5} \\
         \hline
     \end{tabular}
 \end{table}
@@ -542,15 +542,15 @@ $\theta_2 = \min(x_{11}, x_{ 32}) = 90,\ f(X_2) = f(X_1) - \theta_2 \cdot \Delta
         \hline
         \backslashbox{$u_i$}{$v_j$} & 7                   & 4                   & 3                   & 6                   \\
         \hline
-        0                           & \doublecell{45}{7} & \doublecell{125}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        0                           & \doublecell{45}{7}  & \doublecell{125}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
         \hline
         -1                          & \doublecell{$-$}{7} & \doublecell{65}{3}  & \doublecell{$-$}{7} & \doublecell{$-$}{8} \\
         \hline
-        -2                          & \doublecell{115}{5}  & \doublecell{$-$}{4}  & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
+        -2                          & \doublecell{115}{5} & \doublecell{$-$}{4} & \doublecell{$-$}{8} & \doublecell{$-$}{8} \\
         \hline
-        -4                           & \doublecell{35}{3} & \doublecell{$-$}{6}  & \doublecell{$-$}{5}  & \doublecell{95}{2} \\
+        -4                          & \doublecell{35}{3}  & \doublecell{$-$}{6} & \doublecell{$-$}{5} & \doublecell{95}{2}  \\
         \hline
-        -1                          & \doublecell{$-$}{8} & \doublecell{$-$}{6} & \doublecell{135}{2}  & \doublecell{5}{5} \\
+        -1                          & \doublecell{$-$}{8} & \doublecell{$-$}{6} & \doublecell{135}{2} & \doublecell{5}{5}   \\
         \hline
     \end{tabular}
 \end{table}
@@ -558,19 +558,65 @@ $\theta_2 = \min(x_{11}, x_{ 32}) = 90,\ f(X_2) = f(X_1) - \theta_2 \cdot \Delta
 Здесь для всех клеток выполняется критерий оптимальности.
 
 Таким образом, оптимальное решение $X^* = X_7 = \begin{pmatrix}
-        45 & 125 & 0 & 0 \\
-        0  & 65  & 0 & 0 \\
-        115 & 0 & 0 & 0 \\
-        35 & 0 & 0 & 95 \\
-        0 & 0 & 135 & 5
-\end{pmatrix}$, при этом $f_{min} = f(X_7) = 2175$.
+        45  & 125 & 0   & 0  \\
+        0   & 65  & 0   & 0  \\
+        115 & 0   & 0   & 0  \\
+        35  & 0   & 0   & 95 \\
+        0   & 0   & 135 & 5
+    \end{pmatrix}$, при этом $f_{min} = f(X_7) = 2175$.
+
+\subsubsection{Программная реализация}
+
+\begin{lstlisting}[language=Python]
+from cvxopt.modeling import variable, op
+import time
+start = time.time()
+x = variable(25, 'x')
+c= [7, 4, 8, 8, 7, 3, 7, 8, 5, 4, 8, 8, 3, 6, 5, 2, 8, 6, 2, 5]
+z=sum(c[i]*x[i] for i in range(20))
+mass = []
+mass += [sum(x[i] for i in range(4)) == 170]
+mass += [sum(x[i] for i in range(4, 8)) == 65]
+mass += [sum(x[i] for i in range(8, 12)) == 115]
+mass += [sum(x[i] for i in range(12, 16)) == 130]
+mass += [sum(x[i] for i in range(16, 20)) == 140]
+mass += [sum(x[i] for i in range(0, 20, 4)) == 195]
+mass += [sum(x[i] for i in range(1, 20, 4)) == 190]
+mass += [sum(x[i] for i in range(2, 20, 4)) == 135]
+mass += [sum(x[i] for i in range(3, 20, 4)) == 100]
+mass += [x >= 0]    
+
+problem =op(z, mass)
+problem.solve(solver='glpk')  
+print("Результат Xopt:")
+for i, value in enumerate(x.value, start=1):
+    print(f"{int(value):3}", end=' ')
+    if i % 4 == 0:
+        print()
+print(f"Стоимость доставки: {problem.objective.value()[0]}")
+stop = time.time()
+print (f"Время:{stop - start}")
+\end{lstlisting}
+
+Вывод:
+\begin{lstlisting}[language=text]
+Xopt result:
+ 45 125   0   0 
+  0  65   0   0 
+115   0   0   0 
+ 35   0   0  95 
+  0   0 135   5 
+  0   0   0   0 
+Transport cost: 2175.0
+Time: 0.012
+\end{lstlisting}
 
 \textbf{Ответ:} Оптимальное решение --- $X^* = \begin{pmatrix}
-        45 & 125 & 0 & 0 \\
-        0  & 65  & 0 & 0 \\
-        115 & 0 & 0 & 0 \\
-        35 & 0 & 0 & 95 \\
-        0 & 0 & 135 & 5
-\end{pmatrix}$, 
+        45  & 125 & 0   & 0  \\
+        0   & 65  & 0   & 0  \\
+        115 & 0   & 0   & 0  \\
+        35  & 0   & 0   & 95 \\
+        0   & 0   & 135 & 5
+    \end{pmatrix}$,
 
 минимум целевой функции --- $f_{min} = 2175$. \label{05-lab-answer}
