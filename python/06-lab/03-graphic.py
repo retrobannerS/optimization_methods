@@ -24,10 +24,11 @@ a2, b2 = 5 / 3, 5
 a3, b3 = 2 / 3, -4
 a4, b4 = float("inf"), 0
 a5, b5 = 0, 0
+a7, b7 = -1, 11
 g1, g2 = 1, 1
 
-a = [a1, a2, a3, a4, a5]
-b = [b1, b2, b3, b4, b5]
+a = [a1, a2, a3, a4, a5, a7]
+b = [b1, b2, b3, b4, b5, b7]
 
 X = np.linspace(-20, 100, 1000)
 line1 = a1 * X + b1
@@ -35,6 +36,8 @@ line2 = a2 * X + b2
 line3 = a3 * X + b3
 line4 = np.zeros(1000)
 line5 = a5 * X + b5
+line6 = np.ones(1000) * 9
+line7 = a7 * X + b7
 
 plt.quiver(
     0,
@@ -53,6 +56,8 @@ plt.plot(X, line2, label=r"$x_2 = \frac{5}{3}x_1 + 5$")
 plt.plot(X, line3, label=r"$x_2 = \frac{2}{3}x_1 - 4$")
 plt.plot(line4, X, label=r"$x_1 = 0$", lw=5)
 plt.plot(X, line5, label=r"$x_2 = 0$", lw=5)
+plt.plot(line6, X, label=r"$x_1 = 9$")
+plt.plot(X, line7, label=r"$x_2 = -x_1 + 11$", color='black')
 
 plt.fill_between(
     X, line1, -1, color="cyan", alpha=0.2, label=r"Область $x_2 \leq -\frac{1}{2}x_1 + 7$"
@@ -63,6 +68,10 @@ plt.fill_between(
 plt.fill_between(
     X, line3, 15, color="purple", alpha=0.2, label=r"Область $x_2 \leq \frac{2}{3}x_1 - 4$"
 )
+plt.fill_between(
+    X, line7, -1, color="black", alpha=0.2, label=r"Область $x_2 \leq -x_1 + 11$"
+)
+plt.axvspan(0, 9, color='red', alpha=0.2, label=r"Область $x_1 \leq 9$")
 
 intersections = []
 for i in range(len(a)):
@@ -70,12 +79,14 @@ for i in range(len(a)):
         if i < j:
             intersections += [find_intersection(a[i], b[i], a[j], b[j])]
 
-intersections = [(x_1, x_2) for (x_1, x_2) in intersections if x_1 >= 0 and x_2 >= 0]
+intersections += [(9, 0), (9, 2.5)]
+
+intersections = [(x_1, x_2) for (x_1, x_2) in intersections if 0 <= x_1 <= 9 and x_2 >= 0]
 
 for i, (x_1, x_2) in enumerate(intersections, start=1):
     plt.plot(x_1, x_2, 'ko')
     plt.annotate(f'\\textbf {i}: ({x_1:.2f}, {x_2:.2f})', xy=(x_1, x_2), xytext=(x_1 + 0.3, x_2 + 0.4),
-                 arrowprops=dict(facecolor='black', arrowstyle='->'))
+                arrowprops=dict(facecolor='black', arrowstyle='->'))
 
 
 plt.xlabel(r"$x_1$", fontsize=14)
@@ -83,7 +94,7 @@ plt.ylabel(r"$x_2$", fontsize=14)
 
 plt.xlim(-0.01, 15)
 plt.ylim(-0.01, 10)
-plt.legend()
+plt.legend(ncol=2, loc="upper right")
 plt.gca().set_aspect("equal")
 plt.show()
 
@@ -91,5 +102,5 @@ def F(x_1, x_2):
     return g1 * x_1 + g2 * x_2
 
 for i, (x_1, x_2) in enumerate(intersections, start=1):
-    if i not in [3, 4]:
+    if i not in [2, 5, 10, 11]:
         print(f"Значение F в точке {i} равно {F(x_1, x_2):.2f}")

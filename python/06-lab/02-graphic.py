@@ -35,6 +35,7 @@ line2 = a2 * X + b2
 line3 = a3 * X + b3
 line4 = np.zeros(1000)
 line5 = a5 * X + b5
+line6 = np.ones(1000) * 9
 
 plt.quiver(
     0,
@@ -53,6 +54,7 @@ plt.plot(X, line2, label=r"$x_2 = \frac{5}{3}x_1 + 5$")
 plt.plot(X, line3, label=r"$x_2 = \frac{2}{3}x_1 - 4$")
 plt.plot(line4, X, label=r"$x_1 = 0$", lw=5)
 plt.plot(X, line5, label=r"$x_2 = 0$", lw=5)
+plt.plot(line6, X, label=r"$x_1 = 9$")
 
 plt.fill_between(
     X, line1, -1, color="cyan", alpha=0.2, label=r"Область $x_2 \leq -\frac{1}{2}x_1 + 7$"
@@ -63,6 +65,7 @@ plt.fill_between(
 plt.fill_between(
     X, line3, 15, color="purple", alpha=0.2, label=r"Область $x_2 \leq \frac{2}{3}x_1 - 4$"
 )
+plt.axvspan(0, 9, color='red', alpha=0.2, label=r"Область $x_1 \leq 9$")
 
 intersections = []
 for i in range(len(a)):
@@ -70,7 +73,9 @@ for i in range(len(a)):
         if i < j:
             intersections += [find_intersection(a[i], b[i], a[j], b[j])]
 
-intersections = [(x_1, x_2) for (x_1, x_2) in intersections if x_1 >= 0 and x_2 >= 0]
+intersections += [(9, 0), (9, 2.5), (9, 2)]
+
+intersections = [(x_1, x_2) for (x_1, x_2) in intersections if 0 <= x_1 <= 9 and x_2 >= 0]
 
 for i, (x_1, x_2) in enumerate(intersections, start=1):
     plt.plot(x_1, x_2, 'ko')
@@ -83,7 +88,7 @@ plt.ylabel(r"$x_2$", fontsize=14)
 
 plt.xlim(-0.01, 15)
 plt.ylim(-0.01, 10)
-plt.legend()
+plt.legend(ncol=2)
 plt.gca().set_aspect("equal")
 plt.show()
 
@@ -91,5 +96,5 @@ def F(x_1, x_2):
     return g1 * x_1 + g2 * x_2
 
 for i, (x_1, x_2) in enumerate(intersections, start=1):
-    if i not in [3, 4]:
+    if i not in [2, 6]:
         print(f"Значение F в точке {i} равно {F(x_1, x_2):.2f}")
