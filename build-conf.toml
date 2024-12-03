@@ -13,6 +13,7 @@ preambles = [
     "listings.tex",
     "headers.tex",
     "tables.tex",
+    "graphs.tex",
 ]
 
 [metadata.general]
