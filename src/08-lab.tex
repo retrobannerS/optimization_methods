@@ -1,0 +1,311 @@
+\section{Задание №8}\label{08-lab}
+
+\subsection{Условие}\label{08-lab-condition}
+
+Придумать задачу о назначениях размерности $10 \times 10$. Диапазон значений элементов матрицы от 1 до 9.
+
+Решить задачу, используя венгерский алгоритм.
+
+В отчёт добавить решение задачи с помощью программных средств.
+
+\subsection{Постановка задачи}\label{08-lab-statement}
+
+$n = 10$ ресурсов и объектов. Матрица стоимостей $C$ размерности $n \times n$:
+
+\[
+    C = \begin{pmatrix}
+        4 & 4 & 5 & 2 & 6 & 4 & 4 & 5 & 4 & 4 \\
+        1 & 7 & 6 & 2 & 9 & 8 & 6 & 2 & 4 & 6 \\
+        8 & 9 & 2 & 5 & 3 & 5 & 9 & 7 & 5 & 2 \\
+        9 & 5 & 4 & 2 & 5 & 2 & 3 & 1 & 7 & 6 \\
+        5 & 8 & 8 & 7 & 6 & 3 & 8 & 5 & 9 & 5 \\
+        6 & 5 & 1 & 7 & 2 & 8 & 2 & 7 & 5 & 2 \\
+        8 & 4 & 9 & 2 & 3 & 3 & 4 & 7 & 3 & 3 \\
+        8 & 5 & 4 & 9 & 6 & 5 & 8 & 3 & 7 & 4 \\
+        7 & 4 & 2 & 7 & 8 & 8 & 2 & 7 & 5 & 7 \\
+        3 & 7 & 6 & 7 & 5 & 5 & 7 & 5 & 8 & 9
+    \end{pmatrix}
+\]
+
+\[
+    x_{ij} = \begin{cases}
+        1, & \text{если назначается i-ый ресурс j-ому объекту}, \\
+        0, & \text{иначе}.
+    \end{cases}
+\]
+
+Математическая модель задачи о назначениях:
+
+\begin{align*}
+     & F = \sum\limits_{i=1}^{n} \sum\limits_{j=1}^{n} c_{ij} x_{ij} \to \min                                         \\
+     & \begin{cases}
+           \sum\limits_{j=1}^{n} x_{ij} = 1, i = \overline{1, n} \text{-- для каждого объекта назначен ровно один ресурс} \\
+           \sum\limits_{i=1}^{n} x_{ij} = 1, j = \overline{1, n} \text{-- для каждого ресурса назначен ровно один объект}
+       \end{cases}
+\end{align*}
+
+\subsection{Решение}\label{08-lab-solution}
+
+Для начала заведём таблицу для решения задачи венгерским методом:
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{Ресурс}{Объект} & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+        \hline
+        1                             & 4 & 4 & 5 & 2 & 6 & 4 & 4 & 5 & 4 & 4  \\
+        \hline
+        2                             & 1 & 7 & 6 & 2 & 9 & 8 & 6 & 2 & 4 & 6  \\
+        \hline
+        3                             & 8 & 9 & 2 & 5 & 3 & 5 & 9 & 7 & 5 & 2  \\
+        \hline
+        4                             & 9 & 5 & 4 & 2 & 5 & 2 & 3 & 1 & 7 & 6  \\
+        \hline
+        5                             & 5 & 8 & 8 & 7 & 6 & 3 & 8 & 5 & 9 & 5  \\
+        \hline
+        6                             & 6 & 5 & 1 & 7 & 2 & 8 & 2 & 7 & 5 & 2  \\
+        \hline
+        7                             & 8 & 4 & 9 & 2 & 3 & 3 & 4 & 7 & 3 & 3  \\
+        \hline
+        8                             & 8 & 5 & 4 & 9 & 6 & 5 & 8 & 3 & 7 & 4  \\
+        \hline
+        9                             & 7 & 4 & 2 & 7 & 8 & 8 & 2 & 7 & 5 & 7  \\
+        \hline
+        10                            & 3 & 7 & 6 & 7 & 5 & 5 & 7 & 5 & 8 & 9  \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Редуцируем таблицу:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{Ресурс}{Объект} & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+        \hline
+        1                             & 2 & 0 & 3 & 0 & 3 & 2 & 2 & 3 & 1 & 2  \\
+        \hline
+        2                             & 0 & 4 & 5 & 1 & 7 & 7 & 5 & 1 & 2 & 5  \\
+        \hline
+        3                             & 6 & 5 & 0 & 3 & 0 & 3 & 7 & 5 & 2 & 0  \\
+        \hline
+        4                             & 8 & 2 & 3 & 1 & 3 & 1 & 2 & 0 & 5 & 5  \\
+        \hline
+        5                             & 2 & 3 & 5 & 4 & 2 & 0 & 5 & 2 & 5 & 2  \\
+        \hline
+        6                             & 5 & 2 & 0 & 6 & 0 & 7 & 1 & 6 & 3 & 1  \\
+        \hline
+        7                             & 6 & 0 & 7 & 0 & 0 & 1 & 2 & 5 & 0 & 1  \\
+        \hline
+        8                             & 5 & 0 & 1 & 6 & 2 & 2 & 5 & 0 & 3 & 1  \\
+        \hline
+        9                             & 5 & 0 & 0 & 5 & 5 & 6 & 0 & 5 & 2 & 5  \\
+        \hline
+        10                            & 0 & 2 & 3 & 4 & 1 & 2 & 4 & 2 & 4 & 6  \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Строим назначение. Сначала по строкам:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{Ресурс}{Объект} & 1             & 2             & 3 & 4             & 5 & 6             & 7 & 8             & 9 & 10 \\
+        \hline
+        1                             & 2             & \cancel0      & 3 & \mycellcolor0 & 3 & 2             & 2 & 3             & 1 & 2  \\
+        \hline
+        2                             & \mycellcolor0 & 4             & 5 & 1             & 7 & 7             & 5 & 1             & 2 & 5  \\
+        \hline
+        3                             & 6             & 5             & 0 & 3             & 0 & 3             & 7 & 5             & 2 & 0  \\
+        \hline
+        4                             & 8             & 2             & 3 & 1             & 3 & 1             & 2 & \mycellcolor0 & 5 & 5  \\
+        \hline
+        5                             & 2             & 3             & 5 & 4             & 2 & \mycellcolor0 & 5 & 2             & 5 & 2  \\
+        \hline
+        6                             & 5             & 2             & 0 & 6             & 0 & 7             & 1 & 6             & 3 & 1  \\
+        \hline
+        7                             & 6             & \cancel0      & 7 & \cancel0      & 0 & 1             & 2 & 5             & 0 & 1  \\
+        \hline
+        8                             & 5             & \mycellcolor0 & 1 & 6             & 2 & 2             & 5 & \cancel{0}    & 3 & 1  \\
+        \hline
+        9                             & 5             & \cancel0      & 0 & 5             & 5 & 6             & 0 & 5             & 2 & 5  \\
+        \hline
+        10                            & \cancel{0}    & 2             & 3 & 4             & 1 & 2             & 4 & 2             & 4 & 6  \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Потом по столбцам:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{Ресурс}{Объект} & 1             & 2             & 3             & 4             & 5        & 6             & 7             & 8             & 9             & 10            \\
+        \hline
+        1                             & 2             & \cancel0      & 3             & \mycellcolor0 & 3        & 2             & 2             & 3             & 1             & 2             \\
+        \hline
+        2                             & \mycellcolor0 & 4             & 5             & 1             & 7        & 7             & 5             & 1             & 2             & 5             \\
+        \hline
+        3                             & 6             & 5             & \cancel0      & 3             & \cancel0 & 3             & 7             & 5             & 2             & \mycellcolor0 \\
+        \hline
+        4                             & 8             & 2             & 3             & 1             & 3        & 1             & 2             & \mycellcolor0 & 5             & 5             \\
+        \hline
+        5                             & 2             & 3             & 5             & 4             & 2        & \mycellcolor0 & 5             & 2             & 5             & 2             \\
+        \hline
+        6                             & 5             & 2             & \mycellcolor0 & 6             & \cancel0 & 7             & 1             & 6             & 3             & 1             \\
+        \hline
+        7                             & 6             & \cancel0      & 7             & \cancel0      & \cancel0 & 1             & 2             & 5             & \mycellcolor0 & 1             \\
+        \hline
+        8                             & 5             & \mycellcolor0 & 1             & 6             & 2        & 2             & 5             & \cancel{0}    & 3             & 1             \\
+        \hline
+        9                             & 5             & \cancel0      & \cancel0      & 5             & 5        & 6             & \mycellcolor0 & 5             & 2             & 5             \\
+        \hline
+        10                            & \cancel{0}    & 2             & 3             & 4             & 1        & 2             & 4             & 2             & 4             & 6             \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Получили неполное назначение, решение задачи ещё не оптимально.
+
+Модификация матрицы стоимостей. Для начала вычеркнем по очереди строки и столбцы с максимальным числом нулей. Так, пока не останется ни одного нуля. Зачёркивание будет проводиться с помощью цветовой разметки.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|>{\columncolor{orange!20}}c|c|c|c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{Ресурс}{Объект} & 1            & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+        \hline \rowcolor{red!20}
+        1                             & \crosscell 2 & 0 & 3 & 0 & 3 & 2 & 2 & 3 & 1 & 2  \\
+        \hline
+        2                             & 0            & 4 & 5 & 1 & 7 & 7 & 5 & 1 & 2 & 5  \\
+        \hline \rowcolor{red!20}
+        3                             & \crosscell6  & 5 & 0 & 3 & 0 & 3 & 7 & 5 & 2 & 0  \\
+        \hline \rowcolor{red!20}
+        4                             & \crosscell8  & 2 & 3 & 1 & 3 & 1 & 2 & 0 & 5 & 5  \\
+        \hline \rowcolor{red!20}
+        5                             & \crosscell2  & 3 & 5 & 4 & 2 & 0 & 5 & 2 & 5 & 2  \\
+        \hline \rowcolor{red!20}
+        6                             & \crosscell5  & 2 & 0 & 6 & 0 & 7 & 1 & 6 & 3 & 1  \\
+        \hline \rowcolor{red!20}
+        7                             & \crosscell6  & 0 & 7 & 0 & 0 & 1 & 2 & 5 & 0 & 1  \\
+        \hline \rowcolor{red!20}
+        8                             & \crosscell5  & 0 & 1 & 6 & 2 & 2 & 5 & 0 & 3 & 1  \\
+        \hline \rowcolor{red!20}
+        9                             & \crosscell5  & 0 & 0 & 5 & 5 & 6 & 0 & 5 & 2 & 5  \\
+        \hline
+        10                            & 0            & 2 & 3 & 4 & 1 & 2 & 4 & 2 & 4 & 6  \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Минимальный элемент невычеркнутых ячеек: 1.
+
+Вычитаем его из невычеркнутых строк и прибавляем к ячейкам, находящимся на пересечении вычеркнутых столбцов и вычеркнутых строк.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|>{\columncolor{orange!20}}c|c|c|c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{Ресурс}{Объект} & 1                     & 2          & 3          & 4          & 5          & 6          & 7          & 8          & 9           & 10         \\
+        \hline \rowcolor{red!20}
+        1                             & \crosscell \textbf{3} & 0          & 3          & 0          & 3          & 2          & 2          & 3          & 1           & 2          \\
+        \hline
+        2                             & 0                     & \textbf{3} & \textbf{4} & \textbf{0} & \textbf{6} & \textbf{6} & \textbf{4} & \textbf{0} & \textbf{1}  & \textbf{4} \\
+        \hline \rowcolor{red!20}
+        3                             & \crosscell \textbf{7} & 5          & 0          & 3          & 0          & 3          & 7          & 5          & 2           & 0          \\
+        \hline \rowcolor{red!20}
+        4                             & \crosscell \textbf{9} & 2          & 3          & 1          & 3          & 1          & 2          & 0          & 5           & 5          \\
+        \hline \rowcolor{red!20}
+        5                             & \crosscell \textbf{3} & 3          & 5          & 4          & 2          & 0          & 5          & 2          & 5           & 2          \\
+        \hline \rowcolor{red!20}
+        6                             & \crosscell \textbf{6} & 2          & 0          & 6          & 0          & 7          & 1          & 6          & 3           & 1          \\
+        \hline \rowcolor{red!20}
+        7                             & \crosscell \textbf{7} & 0          & 7          & 0          & 0          & 1          & 2          & 5          & 0           & 1          \\
+        \hline \rowcolor{red!20}
+        8                             & \crosscell \textbf{6} & 0          & 1          & 6          & 2          & 2          & 5          & 0          & 3           & 1          \\
+        \hline \rowcolor{red!20}
+        9                             & \crosscell \textbf{6} & 0          & 0          & 5          & 5          & 6          & 0          & 5          & 2           & 5          \\
+        \hline
+        10                            & 0                     & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{0} & \textbf{1} & \textbf{3} & \textbf{1} & \textbf{3 } & \textbf{5} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Эта матрица уже редуцирована. Построим назначение:
+
+Сначала по строкам
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}cc|c|c|c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{Ресурс}{Объект} & 1             & 2             & 3             & 4             & 5             & 6             & 7             & 8             & 9             & 10            \\
+        \hline
+        1                             & 3             & \cancel0      & 3             & \mycellcolor0 & 3             & 2             & 2             & 3             & 1             & 2             \\
+        \hline
+        2                             & \mycellcolor0 & 3             & 4             & \cancel0      & 6             & 6             & 4             & \cancel0      & 1             & 4             \\
+        \hline
+        3                             & 7             & 5             & \cancel0      & 3             & \cancel0      & 3             & 7             & 5             & 2             & \mycellcolor0 \\
+        \hline
+        4                             & 9             & 2             & 3             & 1             & 3             & 1             & 2             & \mycellcolor0 & 5             & 5             \\
+        \hline
+        5                             & 3             & 3             & 5             & 4             & 2             & \mycellcolor0 & 5             & 2             & 5             & 2             \\
+        \hline
+        6                             & 6             & 2             & \mycellcolor0 & 6             & \cancel0      & 7             & 1             & 6             & 3             & 1             \\
+        \hline
+        7                             & 7             & \cancel0      & 7             & \cancel0      & \cancel0      & 1             & 2             & 5             & \mycellcolor0 & 1             \\
+        \hline
+        8                             & 6             & \mycellcolor0 & 1             & 6             & 2             & 2             & 5             & \cancel0      & 3             & 1             \\
+        \hline
+        9                             & 6             & \cancel0      & 0             & 5             & 5             & 6             & \mycellcolor0 & 5             & 2             & 5             \\
+        \hline
+        10                            & \cancel0      & 1             & 2             & 3             & \mycellcolor0 & 1             & 3             & 1             & 3             & 5             \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Без простроения назначений по столбцам получили полное, а значит и оптимальное назначение. Итак, построим матрицу оптимального назначения:
+
+\[
+    X^* = \begin{pmatrix}
+        0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+        0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+        0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+        0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+        0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+        0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0
+    \end{pmatrix}
+\]
+
+При этом функция обращается в минимум: $F^* = F_{min} = \sum\limits_{i=1}^{n} \sum\limits_{j=1}^{n} c_{ij} x^*_{ij} = 2 + 1 + 2 + 1 + 3 + 1 + 3 + 5 + 2 + 5 = 25$
+
+В конце приведём сравнение с программным решением (код можно найти \href{https://github.com/retrobannerS/optimization_methods/blob/main/python/08-lab/hungarian-algorithm.ipynb}{здесь}) задачи о назначениях:
+
+
+\begin{lstlisting}[language=text]
+list: [(('04', '8'), 1),
+       (('05', '6'), 3),
+       (('010', '5'), 5),
+       (('03', '10'), 2),
+       (('07', '9'), 3),
+       (('01', '4'), 2),
+       (('08', '2'), 5),
+       (('06', '3'), 1),
+       (('02', '1'), 1),
+       (('09', '7'), 2)]
+total: 25
+\end{lstlisting}
+
+\textbf{Ответ:} $F^* = 25$
+
+\newpage
