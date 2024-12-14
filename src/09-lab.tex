@@ -1,0 +1,622 @@
+\section{Задание №9}\label{09-lab}
+
+\subsection{Условие}\label{09-lab-condition}
+
+Придумать задачу о распределении ресурсов размерности $6 \times 6$.
+То есть в задаче имеется ресурс в количестве 6 единиц, который должен быть распределен между 6 предприятиями.
+Диапазон значений в матрице доходности не ограничен(но не может быть отрицательных элементов).
+
+Решить задачу динамическим программированием.
+
+В отчёт добавить решение задачи с помощью программных средств.
+
+\subsection{Постановка задачи}\label{09-lab-statement}
+
+$S = 6$ - количество имеющихся ресурсов.
+
+$n = 6$ - количество предприятий.
+
+Использование $j$-ым предприятием $i$ единиц
+ресурса дает доход, определяемый значением нелинейной функции $f_j(i) = f_{ij}$. Обычно значения функции $f_j(i)$ задаются в виде матрицы доходности $F = \|f_{ij}\|_{(S+1) \times n}$.
+Зададим матрицу доходности $F$ в виде таблицы:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{Количество ресурсов}{Предприятие} & 1 & 2 & 3  & 4 & 5  & 6  \\
+        \hline
+        0                                               & 0 & 0 & 0  & 0 & 0  & 0  \\
+        \hline
+        1                                               & 3 & 7 & 8  & 5 & 4  & 8  \\
+        \hline
+        2                                               & 8 & 3 & 6  & 5 & 2  & 8  \\
+        \hline
+        3                                               & 6 & 2 & 5  & 1 & 10 & 6  \\
+        \hline
+        4                                               & 9 & 1 & 10 & 3 & 7  & 4  \\
+        \hline
+        5                                               & 9 & 3 & 5  & 3 & 7  & 5  \\
+        \hline
+        6                                               & 7 & 4 & 8  & 5 & 7  & 10 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Пусть мы $j$-ому предприятию выделили $x_j$ единиц ресурса, тогда доход от этого предприятия будет равен $f_j(x_j)$, а весь доход от всех предприятий будет равен $F = \sum\limits_{j=1}^{n} f_j(x_j)$.
+
+Требуется распределить ресурсы между предприятиями так, чтобы общий доход был максимальным: $F \to \max$
+при условии, что $\sum\limits_{j=1}^{n} x_j = S$ и $x_j \in \N_0 \forall j=\overline{1, n}$.
+
+\subsection{Решение}\label{09-lab-solution}
+
+Вводим следующие обозначения:
+
+$W_j(i) = W_{ij}$ --- максимальный доход, который можно получить, используя $i$ единиц ресурса среди первых $j$ предприятий(то есть $j=\overline{1, n-1}$), при этом $i=\overline{0, S}$.
+
+Их можно записать в виде матрицы $W = \|W_{ij}\|_{(S+1) \times (n-1)}$, которую мы представим в виде таблицы:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{$i$}{$j$} & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0                       &   &   &   &   &   \\
+        \hline
+        1                       &   &   &   &   &   \\
+        \hline
+        2                       &   &   &   &   &   \\
+        \hline
+        3                       &   &   &   &   &   \\
+        \hline
+        4                       &   &   &   &   &   \\
+        \hline
+        5                       &   &   &   &   &   \\
+        \hline
+        6                       &   &   &   &   &   \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Получаем следующие рекуррентные соотношения для заполнения матрицы $W$:
+
+\begin{align*}
+     & W_{i1} = W_1(i) = \max\limits_{0 \leq x_1 \leq i} f_1(x_1) = \max\limits_{0 \leq x_1 \leq i} f_{x_11}, \quad i = \overline{0, S},                        \\
+     & \begin{aligned}
+           W_{ij} = W_j(i) & = \max\limits_{0 \leq x_j \leq i} \left\{ f_j(x_j) + W_{j-1}(i-x_j) \right\} =                                                         \\
+                           & = \max\limits_{0 \leq x_j \leq i} \left\{ f_{x_jj} + W_{(i-x_j)(j-1)} \right\}, \quad j = \overline{2, n-1}, \quad i = \overline{0, S}
+       \end{aligned}.
+\end{align*}
+
+После её заполнения можно найти максимальный доход, который можно получить, используя все $S$ единиц ресурса среди всех $n$ предприятий: $W_n(S)$.
+
+\[ W_n(S) = \max\limits_{0 \leq x_n \leq S} \left\{f_n(x_n) + W_{n-1}(S-x_n)\right\} = \max\limits_{0 \leq x_n \leq S} \left\{f_{x_nn} + W_{(S-x_n)(n-1)}\right\}. \]
+
+При этом можно восстановить оптимальное решение $X^* = \begin{pmatrix} x_1^*, x_2^*, \dots, x_n^* \end{pmatrix}$, используя следующие соотношения:
+
+\begin{flalign*}
+     & x_n^* = \argmax\limits_{0 \leq x_n \leq S} \left\{f_n(x_n) + W_{n-1}(S-x_n)\right\} = \argmax\limits_{0 \leq x_n \leq S} \left\{f_{x_nn} + W_{(S-x_n)(n-1)}\right\},                                                       & \\[10pt]
+     & \begin{aligned}
+           x_j^* & = \argmax\limits_{0 \leq x_j \leq S - x_n^* - x_{n-1}^* - \dots - x_{j+1}^*} \left\{f_j(x_j) + W_{j-1}((S - x_n^* - x_{n-1}^* - \dots - x_{j+1}^*) - x_j)\right\} = \\
+                 & = \argmax W_j(S - x_n^* - x_{n-1}^* - \dots - x_{i+1}^*) = \argmax W_{(S - x_n^* - x_{n-1}^* - \dots - x_{i+1}^*)j}, \quad j = \overline{n-1, 1}
+       \end{aligned} &
+\end{flalign*}
+
+Поэтому проще также ввести матрицу для аргументов $X^0 = \|x_{ij}^0\|_{(S+1) \times (n-1)}$, где $x_{ij}^0 = \argmax W_{ij} $ которую мы представим в виде таблицы:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{$i$}{$j$} & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0                       &   &   &   &   &   \\
+        \hline
+        1                       &   &   &   &   &   \\
+        \hline
+        2                       &   &   &   &   &   \\
+        \hline
+        3                       &   &   &   &   &   \\
+        \hline
+        4                       &   &   &   &   &   \\
+        \hline
+        5                       &   &   &   &   &   \\
+        \hline
+        6                       &   &   &   &   &   \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Начнем динамическое программирование:
+
+\begin{align*}
+     & W_{i1} = W_1(i) = \max\limits_{0 \leq x_1 \leq i} f_1(x_1), \quad i = \overline{0, S} \\
+     & W_{01} = \max \left\{0\right\} = 0, \quad x_{01}^0 = 0                                \\
+     & W_{11} = \max \left\{0; 3\right\} = 3, \quad x_{11}^0 = 1                             \\
+     & W_{21} = \max \left\{0; 3; 8\right\} = 8, \quad x_{21}^0 = 2                          \\
+     & W_{31} = \max \left\{0; 3; 8; 6\right\} = 8, \quad x_{31}^0 = 2                       \\
+     & W_{41} = \max \left\{0; 3; 8; 6; 9\right\} = 9, \quad x_{41}^0 = 4                    \\
+     & W_{51} = \max \left\{0; 3; 8; 6; 9; 9\right\} = 9, \quad x_{01}^0 = 4                 \\
+     & W_{61} = \max \left\{0; 3; 8; 6; 9; 9; 7\right\} = 9, \quad x_{51}^0 = 4              \\
+\end{align*}
+
+И будем заполнять таблицы $W$ и $X^0$, тоская за собой таблицу $F$. На следующем шаге будем использовать столбцы $F_{2 \downarrow}$ и $W_{1 \downarrow}$, потому они выделены цветом.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|>{\columncolor{mycolumncolor}}c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $F$ & 1 & 2 & 3  & 4 & 5  & 6  \\
+        \hline
+        0   & 0 & 0 & 0  & 0 & 0  & 0  \\
+        \hline
+        1   & 3 & 7 & 8  & 5 & 4  & 8  \\
+        \hline
+        2   & 8 & 3 & 6  & 5 & 2  & 8  \\
+        \hline
+        3   & 6 & 2 & 5  & 1 & 10 & 6  \\
+        \hline
+        4   & 9 & 1 & 10 & 3 & 7  & 4  \\
+        \hline
+        5   & 9 & 3 & 5  & 3 & 7  & 5  \\
+        \hline
+        6   & 7 & 4 & 8  & 5 & 7  & 10 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|>{\columncolor{mycolumncolor}}c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0   & 0 &   &   &   &   \\
+        \hline
+        1   & 3 &   &   &   &   \\
+        \hline
+        2   & 8 &   &   &   &   \\
+        \hline
+        3   & 8 &   &   &   &   \\
+        \hline
+        4   & 9 &   &   &   &   \\
+        \hline
+        5   & 9 &   &   &   &   \\
+        \hline
+        6   & 9 &   &   &   &   \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0     & 0 &   &   &   &   \\
+        \hline
+        1     & 1 &   &   &   &   \\
+        \hline
+        2     & 2 &   &   &   &   \\
+        \hline
+        3     & 2 &   &   &   &   \\
+        \hline
+        4     & 4 &   &   &   &   \\
+        \hline
+        5     & 4 &   &   &   &   \\
+        \hline
+        6     & 4 &   &   &   &   \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+     & W_{i2} = W_2(i) = \max\limits_{0 \leq x_2 \leq i} \left\{ f_{x_22} + W_{(i-x_2)(1)} \right\}, \quad i = \overline{0, S} \\
+     & W_{02} = \max \left\{0 + 0\right\} = 0, \quad x_{02}^0 = 0                                                              \\
+     & W_{12} = \max \left\{0 + 3; 7 + 0\right\} = 7, \quad x_{12}^0 = 1                                                       \\
+     & W_{22} = \max \left\{0 + 8; 7 + 3; 3 + 0\right\} = 10, \quad x_{22}^0 = 1                                               \\
+     & W_{32} = \max \left\{0 + 8; 7 + 8; 3 + 3; 2 + 0\right\} = 15, \quad x_{32}^0 = 1                                        \\
+     & W_{42} = \max \left\{0 + 9; 7 + 8; 3 + 8; 2 + 3; 1 + 0\right\} = 15, \quad x_{42}^0 = 1                                 \\
+     & W_{52} = \max \left\{0 + 9; 7 + 9; 3 + 8; 2 + 8; 1 + 3; 3 + 0\right\} = 16, \quad x_{52}^0 = 1                          \\
+     & W_{62} = \max \left\{0 + 9; 7 + 9; 3 + 9; 2 + 8; 1 + 8; 3 + 3; 4 + 0\right\} = 16, \quad x_{62}^0 = 1
+\end{align*}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|>{\columncolor{mycolumncolor}}c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $F$ & 1 & 2 & 3  & 4 & 5  & 6  \\
+        \hline
+        0   & 0 & 0 & 0  & 0 & 0  & 0  \\
+        \hline
+        1   & 3 & 7 & 8  & 5 & 4  & 8  \\
+        \hline
+        2   & 8 & 3 & 6  & 5 & 2  & 8  \\
+        \hline
+        3   & 6 & 2 & 5  & 1 & 10 & 6  \\
+        \hline
+        4   & 9 & 1 & 10 & 3 & 7  & 4  \\
+        \hline
+        5   & 9 & 3 & 5  & 3 & 7  & 5  \\
+        \hline
+        6   & 7 & 4 & 8  & 5 & 7  & 10 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|>{\columncolor{mycolumncolor}}c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1 & 2  & 3 & 4 & 5 \\
+        \hline
+        0   & 0 & 0  &   &   &   \\
+        \hline
+        1   & 3 & 7  &   &   &   \\
+        \hline
+        2   & 8 & 10 &   &   &   \\
+        \hline
+        3   & 8 & 15 &   &   &   \\
+        \hline
+        4   & 9 & 15 &   &   &   \\
+        \hline
+        5   & 9 & 16 &   &   &   \\
+        \hline
+        6   & 9 & 16 &   &   &   \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0     & 0 & 0 &   &   &   \\
+        \hline
+        1     & 1 & 1 &   &   &   \\
+        \hline
+        2     & 2 & 1 &   &   &   \\
+        \hline
+        3     & 2 & 1 &   &   &   \\
+        \hline
+        4     & 4 & 1 &   &   &   \\
+        \hline
+        5     & 4 & 1 &   &   &   \\
+        \hline
+        6     & 4 & 1 &   &   &   \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+     & W_{i3} = W_3(i) = \max\limits_{0 \leq x_3 \leq i} \left\{ f_{x_33} + W_{(i-x_3)(2)} \right\}, \quad i = \overline{0, S} \\
+     & W_{03} = \max \left\{0 + 0\right\} = 0, \quad x_{03}^0 = 0                                                              \\
+     & W_{13} = \max \left\{0 + 7; 8 + 0\right\} = 8, \quad x_{13}^0 = 1                                                       \\
+     & W_{23} = \max \left\{0 + 10; 8 + 7; 6 + 0\right\} = 15, \quad x_{23}^0 = 1                                              \\
+     & W_{33} = \max \left\{0 + 15; 8 + 10; 6 + 7; 5 + 0\right\} = 18, \quad x_{33}^0 = 1                                      \\
+     & W_{43} = \max \left\{0 + 15; 8 + 15; 6 + 10; 5 + 7; 10 + 0\right\} = 23, \quad x_{43}^0 = 1                             \\
+     & W_{53} = \max \left\{0 + 16; 8 + 15; 6 + 15; 5 + 10; 10 + 7; 5 + 0\right\} = 23, \quad x_{53}^0 = 1                     \\
+     & W_{63} = \max \left\{0 + 16; 8 + 16; 6 + 15; 5 + 15; 10 + 10; 5 + 7; 8 + 0\right\} = 24, \quad x_{63}^0 = 1
+\end{align*}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|>{\columncolor{mycolumncolor}}c|c|c|}
+        \hline \rowcolor{lightgray}
+        $F$ & 1 & 2 & 3  & 4 & 5  & 6  \\
+        \hline
+        0   & 0 & 0 & 0  & 0 & 0  & 0  \\
+        \hline
+        1   & 3 & 7 & 8  & 5 & 4  & 8  \\
+        \hline
+        2   & 8 & 3 & 6  & 5 & 2  & 8  \\
+        \hline
+        3   & 6 & 2 & 5  & 1 & 10 & 6  \\
+        \hline
+        4   & 9 & 1 & 10 & 3 & 7  & 4  \\
+        \hline
+        5   & 9 & 3 & 5  & 3 & 7  & 5  \\
+        \hline
+        6   & 7 & 4 & 8  & 5 & 7  & 10 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|>{\columncolor{mycolumncolor}}c|c|c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1 & 2  & 3  & 4 & 5 \\
+        \hline
+        0   & 0 & 0  & 0  &   &   \\
+        \hline
+        1   & 3 & 7  & 8  &   &   \\
+        \hline
+        2   & 8 & 10 & 15 &   &   \\
+        \hline
+        3   & 8 & 15 & 18 &   &   \\
+        \hline
+        4   & 9 & 15 & 23 &   &   \\
+        \hline
+        5   & 9 & 16 & 23 &   &   \\
+        \hline
+        6   & 9 & 16 & 24 &   &   \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0     & 0 & 0 & 0 &   &   \\
+        \hline
+        1     & 1 & 1 & 1 &   &   \\
+        \hline
+        2     & 2 & 1 & 1 &   &   \\
+        \hline
+        3     & 2 & 1 & 1 &   &   \\
+        \hline
+        4     & 4 & 1 & 1 &   &   \\
+        \hline
+        5     & 4 & 1 & 1 &   &   \\
+        \hline
+        6     & 4 & 1 & 1 &   &   \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+     & W_{i4} = W_4(i) = \max\limits_{0 \leq x_4 \leq i} \left\{ f_{x_44} + W_{(i-x_4)(3)} \right\}, \quad i = \overline{0, S} \\
+     & W_{04} = \max \left\{0 + 0\right\} = 0, \quad x_{04}^0 = 0                                                              \\
+     & W_{14} = \max \left\{0 + 8; 5 + 0\right\} = 8, \quad x_{14}^0 = 0                                                       \\
+     & W_{24} = \max \left\{0 + 15; 5 + 8; 5 + 0\right\} = 15, \quad x_{24}^0 = 0                                              \\
+     & W_{34} = \max \left\{0 + 18; 5 + 15; 5 + 8; 1 + 0\right\} = 20, \quad x_{34}^0 = 1                                      \\
+     & W_{44} = \max \left\{0 + 23; 5 + 18; 5 + 15; 1 + 8; 3 + 0\right\} = 23, \quad x_{44}^0 = 0                              \\
+     & W_{54} = \max \left\{0 + 23; 5 + 23; 5 + 18; 1 + 15; 3 + 8; 3 + 0\right\} = 28, \quad x_{54}^0 = 1                      \\
+     & W_{64} = \max \left\{0 + 24; 5 + 23; 5 + 23; 1 + 18; 3 + 15; 3 + 8; 5 + 0\right\} = 28, \quad x_{64}^0 = 1
+\end{align*}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|>{\columncolor{mycolumncolor}}c|c|}
+        \hline \rowcolor{lightgray}
+        $F$ & 1 & 2 & 3  & 4 & 5  & 6  \\
+        \hline
+        0   & 0 & 0 & 0  & 0 & 0  & 0  \\
+        \hline
+        1   & 3 & 7 & 8  & 5 & 4  & 8  \\
+        \hline
+        2   & 8 & 3 & 6  & 5 & 2  & 8  \\
+        \hline
+        3   & 6 & 2 & 5  & 1 & 10 & 6  \\
+        \hline
+        4   & 9 & 1 & 10 & 3 & 7  & 4  \\
+        \hline
+        5   & 9 & 3 & 5  & 3 & 7  & 5  \\
+        \hline
+        6   & 7 & 4 & 8  & 5 & 7  & 10 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|>{\columncolor{mycolumncolor}}c|c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1 & 2  & 3  & 4  & 5 \\
+        \hline
+        0   & 0 & 0  & 0  & 0  &   \\
+        \hline
+        1   & 3 & 7  & 8  & 8  &   \\
+        \hline
+        2   & 8 & 10 & 15 & 15 &   \\
+        \hline
+        3   & 8 & 15 & 18 & 20 &   \\
+        \hline
+        4   & 9 & 15 & 23 & 23 &   \\
+        \hline
+        5   & 9 & 16 & 23 & 28 &   \\
+        \hline
+        6   & 9 & 16 & 24 & 28 &   \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0     & 0 & 0 & 0 & 0 &   \\
+        \hline
+        1     & 1 & 1 & 1 & 0 &   \\
+        \hline
+        2     & 2 & 1 & 1 & 0 &   \\
+        \hline
+        3     & 2 & 1 & 1 & 1 &   \\
+        \hline
+        4     & 4 & 1 & 1 & 0 &   \\
+        \hline
+        5     & 4 & 1 & 1 & 1 &   \\
+        \hline
+        6     & 4 & 1 & 1 & 1 &   \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+     & W_{i5} = W_5(i) = \max\limits_{0 \leq x_5 \leq i} \left\{ f_{x_55} + W_{(i-x_5)(4)} \right\}, \quad i = \overline{0, S} \\
+     & W_{05} = \max \left\{0 + 0\right\} = 0, \quad x_{05}^0 = 0                                                              \\
+     & W_{15} = \max \left\{0 + 8; 4 + 0\right\} = 8, \quad x_{15}^0 = 0                                                       \\
+     & W_{25} = \max \left\{0 + 15; 4 + 8; 2 + 0\right\} = 15, \quad x_{25}^0 = 0                                              \\
+     & W_{35} = \max \left\{0 + 20; 4 + 15; 2 + 8; 10 + 0\right\} = 20, \quad x_{35}^0 = 0                                     \\
+     & W_{45} = \max \left\{0 + 23; 4 + 20; 2 + 15; 10 + 8; 7 + 0\right\} = 24, \quad x_{45}^0 = 1                             \\
+     & W_{55} = \max \left\{0 + 28; 4 + 23; 2 + 20; 10 + 15; 7 + 8; 7 + 0\right\} = 28, \quad x_{55}^0 = 0                     \\
+     & W_{65} = \max \left\{0 + 28; 4 + 28; 2 + 23; 10 + 20; 7 + 15; 7 + 8; 7 + 0\right\} = 32, \quad x_{65}^0 = 1
+\end{align*}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|>{\columncolor{mycolumncolor}}c|}
+        \hline \rowcolor{lightgray}
+        $F$ & 1 & 2 & 3  & 4 & 5  & 6  \\
+        \hline
+        0   & 0 & 0 & 0  & 0 & 0  & 0  \\
+        \hline
+        1   & 3 & 7 & 8  & 5 & 4  & 8  \\
+        \hline
+        2   & 8 & 3 & 6  & 5 & 2  & 8  \\
+        \hline
+        3   & 6 & 2 & 5  & 1 & 10 & 6  \\
+        \hline
+        4   & 9 & 1 & 10 & 3 & 7  & 4  \\
+        \hline
+        5   & 9 & 3 & 5  & 3 & 7  & 5  \\
+        \hline
+        6   & 7 & 4 & 8  & 5 & 7  & 10 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|>{\columncolor{mycolumncolor}}c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1 & 2  & 3  & 4  & 5  \\
+        \hline
+        0   & 0 & 0  & 0  & 0  & 0  \\
+        \hline
+        1   & 3 & 7  & 8  & 8  & 8  \\
+        \hline
+        2   & 8 & 10 & 15 & 15 & 15 \\
+        \hline
+        3   & 8 & 15 & 18 & 20 & 20 \\
+        \hline
+        4   & 9 & 15 & 23 & 23 & 24 \\
+        \hline
+        5   & 9 & 16 & 23 & 28 & 28 \\
+        \hline
+        6   & 9 & 16 & 24 & 28 & 32 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0     & 0 & 0 & 0 & 0 & 0 \\
+        \hline
+        1     & 1 & 1 & 1 & 0 & 0 \\
+        \hline
+        2     & 2 & 1 & 1 & 0 & 0 \\
+        \hline
+        3     & 2 & 1 & 1 & 1 & 0 \\
+        \hline
+        4     & 4 & 1 & 1 & 0 & 1 \\
+        \hline
+        5     & 4 & 1 & 1 & 1 & 0 \\
+        \hline
+        6     & 4 & 1 & 1 & 1 & 1 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{multline*}
+    W_n(S) = W_6(6) = \max\limits_{0 \leq x_6 \leq 6} \left\{f_{x_66} + W_{(6-x_6)(5)}\right\} = \\
+    = \max \left\{0 + 32; 8 + 28; 8 + 24; 6 + 20; 4 + 15; 5 + 8; 10 + 0\right\} = 36, \quad x_6^* = 1
+\end{multline*}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $F$ & 1 & 2 & 3  & 4 & 5  & 6  \\
+        \hline
+        0   & 0 & 0 & 0  & 0 & 0  & 0  \\
+        \hline
+        1   & 3 & 7 & 8  & 5 & 4  & 8  \\
+        \hline
+        2   & 8 & 3 & 6  & 5 & 2  & 8  \\
+        \hline
+        3   & 6 & 2 & 5  & 1 & 10 & 6  \\
+        \hline
+        4   & 9 & 1 & 10 & 3 & 7  & 4  \\
+        \hline
+        5   & 9 & 3 & 5  & 3 & 7  & 5  \\
+        \hline
+        6   & 7 & 4 & 8  & 5 & 7  & 10 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1 & 2  & 3  & 4  & 5  & 6               \\
+        \hline
+        0   & 0 & 0  & 0  & 0  & 0  &                 \\
+        \hline
+        1   & 3 & 7  & 8  & 8  & 8  &                 \\
+        \hline
+        2   & 8 & 10 & 15 & 15 & 15 &                 \\
+        \hline
+        3   & 8 & 15 & 18 & 20 & 20 &                 \\
+        \hline
+        4   & 9 & 15 & 23 & 23 & 24 &                 \\
+        \hline
+        5   & 9 & 16 & 23 & 28 & 28 &                 \\
+        \hline
+        6   & 9 & 16 & 24 & 28 & 32 & \mycellcolor 36 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 & 6             \\
+        \hline
+        0     & 0 & 0 & 0 & 0 & 0 &               \\
+        \hline
+        1     & 1 & 1 & 1 & 0 & 0 &               \\
+        \hline
+        2     & 2 & 1 & 1 & 0 & 0 &               \\
+        \hline
+        3     & 2 & 1 & 1 & 1 & 0 &               \\
+        \hline
+        4     & 4 & 1 & 1 & 0 & 1 &               \\
+        \hline
+        5     & 4 & 1 & 1 & 1 & 0 &               \\
+        \hline
+        6     & 4 & 1 & 1 & 1 & 1 & \mycellcolor1 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+     & x_n^* = \argmax\limits_{0 \leq x_n \leq S} \left\{f_{x_nn} + W_{(S-x_n)(n-1)}\right\},                                                           \\
+     & x_j^* = \argmax W_{(S - x_n^* - x_{n-1}^* - \dots - x_{i+1}^*)j} = x_{(S - x_n^* - x_{n-1}^* - \dots - x_{i+1}^*)j}^0, \quad j=\overline{n-1, 1} \\                                                                                                                                                                                                                       \\
+     & x_6^* = 1                                                                                                                                        \\                                                                                                                                                                                                                \\                                                                                                                                                                           \\
+     & x_5^* = \argmax W_{(6 - 1)5} = \argmax W_{55} = x_{55}^0 = 0                                                                                     \\
+     & x_4^* = \argmax W_{(6 - 1 - 0)4} = \argmax x_{54} = 1                                                                                            \\
+     & x_3^* = \argmax W_{(6 - 1 - 0 - 1)3} = \argmax x_{43} = 1                                                                                        \\
+     & x_2^* = \argmax W_{(6 - 1 - 0 - 1 - 1)2} = \argmax x_{32} = 1                                                                                    \\
+     & x_1^* = \argmax W_{(6 - 1 - 0 - 1 - 1 - 1)1} = \argmax x_{21} = 2
+\end{align*}
+
+Таким образом оптимальное распределение ресурсов: $X^* = (2, 1, 1, 1, 0, 1)$, а максимальное значение целевой функции: $F^* = F_{\max} = 36$.
+
+Проверим по изначальной таблице:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $F$ & 1             & 2             & 3             & 4             & 5             & 6             \\
+        \hline
+        0   & 0             & 0             & 0             & 0             & \mycellcolor0 & 0             \\
+        \hline
+        1   & 3             & \mycellcolor7 & \mycellcolor8 & \mycellcolor5 & 4             & \mycellcolor8 \\
+        \hline
+        2   & \mycellcolor8 & 3             & 6             & 5             & 2             & 8             \\
+        \hline
+        3   & 6             & 2             & 5             & 1             & 10            & 6             \\
+        \hline
+        4   & 9             & 1             & 10            & 3             & 7             & 4             \\
+        \hline
+        5   & 9             & 3             & 5             & 3             & 7             & 5             \\
+        \hline
+        6   & 7             & 4             & 8             & 5             & 7             & 10            \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\[ F^* = \sum\limits_{i=1}^{n} f_{x_i^*i} = f_{21} + f_{12} + f_{13} + f_{14} + f_{05} + f_{16} = 8 + 7 + 8 + 5 + 0 + 8 = 36 \]
+
+В конце приведём сравнение с программным решением (код можно найти \href{https://github.com/retrobannerS/optimization_methods/blob/main/python/09-lab/resource_allocation.ipynb}{здесь}) задачи о распределении ресурсов:
+
+\begin{lstlisting}[language=text]
+    Максимальный доход: 36
+    Оптимальное распределение ресурсов: [2, 1, 1, 1, 0, 1]
+\end{lstlisting}
+
+\textbf{Ответ:} оптимальное распределение ресурсов: $X^* = (2, 1, 1, 1, 0, 1)$, максимальное значение целевой функции: $F^* = F_{\max} = 36$. \label{09-lab-answer}
+
+\newpage
