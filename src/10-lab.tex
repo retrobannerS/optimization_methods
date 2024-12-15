@@ -127,15 +127,17 @@ $j = \overline{1, n-1}$, $i = \overline{0, S}$.
 Начнем динамическое программирование:
 
 \begin{align*}
-     & P_1 = 2, \quad V_1 = 6                                                                                                                         \\
-     & W_{i1} = W_1(i) = \max\limits_{0 \leq x_1P_1 \leq i} \left\{x_1V_1\right\}, \quad i = \overline{0, S}                                          \\
-     & W_{01} = \max\limits_{0 \leq 2x_1 \leq 0} \left\{6x_1\right\} = \max \left\{0\right\} = 0, \quad x_{01}^0 = 0                                  \\
-     & W_{11} = \max\limits_{0 \leq 2x_1 \leq 1} \left\{6x_1\right\} = \max \left\{0\right\} = 0, \quad x_{11}^0 = 0                                  \\
-     & W_{21} = \max\limits_{0 \leq 2x_1 \leq 2} \left\{6x_1\right\} = \max \left\{0; 6\right\} = 6, \quad x_{21}^0 = 1                               \\
-     & W_{31} = \max\limits_{0 \leq 2x_1 \leq 3} \left\{6x_1\right\} = \max \left\{0; 6\right\} = 6, \quad x_{31}^0 = 1                               \\
-     & W_{41} = \max\limits_{0 \leq 2x_1 \leq 4} \left\{6x_1\right\} = \max \left\{0; 6; 12\right\} = 12, \quad x_{41}^0 = 2                          \\
-     & W_{51} = \max\limits_{0 \leq 2x_1 \leq 5} \left\{6x_1\right\} = \max \left\{0; 6; 12\right\} = 12, \quad x_{51}^0 = 2                          \\
-     & W_{61} = \max\limits_{0 \leq 2x_1 \leq 6} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18\right\} = 18, \quad x_{61}^0 = 3                      \\
+     & P_1 = 2, \quad V_1 = 6                                                                                                    \\
+     & W_{i1} = W_1(i) = \max\limits_{0 \leq x_1P_1 \leq i} \left\{x_1V_1\right\}, \quad i = \overline{0, S}                     \\
+     & W_{01} = \max\limits_{0 \leq 2x_1 \leq 0} \left\{6x_1\right\} = \max \left\{0\right\} = 0, \quad x_{01}^0 = 0             \\
+     & W_{11} = \max\limits_{0 \leq 2x_1 \leq 1} \left\{6x_1\right\} = \max \left\{0\right\} = 0, \quad x_{11}^0 = 0             \\
+     & W_{21} = \max\limits_{0 \leq 2x_1 \leq 2} \left\{6x_1\right\} = \max \left\{0; 6\right\} = 6, \quad x_{21}^0 = 1          \\
+     & W_{31} = \max\limits_{0 \leq 2x_1 \leq 3} \left\{6x_1\right\} = \max \left\{0; 6\right\} = 6, \quad x_{31}^0 = 1          \\
+     & W_{41} = \max\limits_{0 \leq 2x_1 \leq 4} \left\{6x_1\right\} = \max \left\{0; 6; 12\right\} = 12, \quad x_{41}^0 = 2     \\
+     & W_{51} = \max\limits_{0 \leq 2x_1 \leq 5} \left\{6x_1\right\} = \max \left\{0; 6; 12\right\} = 12, \quad x_{51}^0 = 2     \\
+     & W_{61} = \max\limits_{0 \leq 2x_1 \leq 6} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18\right\} = 18, \quad x_{61}^0 = 3
+\end{align*}
+\begin{align*}
      & W_{71} = \max\limits_{0 \leq 2x_1 \leq 7} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18\right\} = 18, \quad x_{71}^0 = 3                      \\
      & W_{81} = \max\limits_{0 \leq 2x_1 \leq 8} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18; 24\right\} = 24, \quad x_{81}^0 = 4                  \\
      & W_{91} = \max\limits_{0 \leq 2x_1 \leq 9} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18; 24\right\} = 24, \quad x_{91}^0 = 4                  \\
@@ -243,15 +245,13 @@ $j = \overline{1, n-1}$, $i = \overline{0, S}$.
      & W_{42} = \max \left\{0 + W_{41}; 8 + W_{11}\right\} = \max \left\{12; 8\right\} = 12, \quad x_{42}^0 = 0                                                                        \\
      & W_{52} = \max \left\{0 + W_{51}; 8 + W_{21}\right\} = \max \left\{12; 14\right\} = 14, \quad x_{52}^0 = 1                                                                       \\
      & W_{62} = \max \left\{0 + W_{61}; 8 + W_{31}; 16 + W_{01}\right\} = \max \left\{18; 14; 16\right\} = 18, \quad x_{62}^0 = 0                                                      \\
-\end{align*}
-\begin{align*}
-     & W_{72} = \max \left\{0 + W_{71}; 8 + W_{41}; 16 + W_{11}\right\} = \max \left\{18; 20; 16\right\} = 20, \quad x_{72}^0 = 1     \\
-     & W_{82} = \max \left\{0 + W_{81}; 8 + W_{51}; 16 + W_{21}\right\} = \max \left\{24; 20; 22\right\} = 24, \quad x_{82}^0 = 0     \\
-     & W_{92} = \max \{0 + W_{91}; 8 + W_{61}; 16 + W_{31}; 24 + W_01\} = \max \{24; 26; 22; 24\} = 26, \quad x_{92}^0 = 1            \\
-     & W_{10, 2} = \max \{0 + W_{10, 1}; 8 + W_{71}; 16 + W_{41}; 24 + W_{11}\} = \max \{30; 26; 28; 24\} = 30, \quad x_{10, 2}^0 = 0 \\
-     & W_{11, 2} = \max \{0 + W_{11, 1}; 8 + W_{81}; 16 + W_{51}; 24 + W_{21}\} = \max \{30; 32; 28; 30\} = 32, \quad x_{11, 2}^0 = 1 \\
-     & W_{12, 2} = \max \{36; 32; 34; 30; 32\} = 36, \quad x_{12, 2}^0 = 0                                                            \\
-     & W_{13, 2} = \max \{36; 38; 34; 36; 32\} = 38, \quad x_{13, 2}^0 = 1                                                            \\
+     & W_{72} = \max \left\{0 + W_{71}; 8 + W_{41}; 16 + W_{11}\right\} = \max \left\{18; 20; 16\right\} = 20, \quad x_{72}^0 = 1                                                      \\
+     & W_{82} = \max \left\{0 + W_{81}; 8 + W_{51}; 16 + W_{21}\right\} = \max \left\{24; 20; 22\right\} = 24, \quad x_{82}^0 = 0                                                      \\
+     & W_{92} = \max \{0 + W_{91}; 8 + W_{61}; 16 + W_{31}; 24 + W_01\} = \max \{24; 26; 22; 24\} = 26, \quad x_{92}^0 = 1                                                             \\
+     & W_{10, 2} = \max \{0 + W_{10, 1}; 8 + W_{71}; 16 + W_{41}; 24 + W_{11}\} = \max \{30; 26; 28; 24\} = 30, \quad x_{10, 2}^0 = 0                                                  \\
+     & W_{11, 2} = \max \{0 + W_{11, 1}; 8 + W_{81}; 16 + W_{51}; 24 + W_{21}\} = \max \{30; 32; 28; 30\} = 32, \quad x_{11, 2}^0 = 1                                                  \\
+     & W_{12, 2} = \max \{36; 32; 34; 30; 32\} = 36, \quad x_{12, 2}^0 = 0                                                                                                             \\
+     & W_{13, 2} = \max \{36; 38; 34; 36; 32\} = 38, \quad x_{13, 2}^0 = 1                                                                                                             \\
      & W_{14, 2} = \max \{42; 38; 40; 36; 38\} = 42, \quad x_{14, 2}^0 = 0
 \end{align*}
 
@@ -352,11 +352,13 @@ $j = \overline{1, n-1}$, $i = \overline{0, S}$.
      & W_{63} = \max \{18; 7 + 6\} = 18, \quad x_{63}^0 = 0                                                                                     \\
      & W_{73} = \max \{20; 7 + 8\} = 20, \quad x_{73}^0 = 0                                                                                     \\
      & W_{83} = \max \{24; 7 + 12; 14 + 0\} = 24, \quad x_{83}^0 = 0                                                                            \\
-     & W_{93} = \max \{26; 7 + 14; 14 + 0\} = 26, \quad x_{93}^0 = 0                                                                            \\
-     & W_{10, 3} = \max \{30; 7 + 18; 14 + 6\} = 30, \quad x_{10, 3}^0 = 0                                                                      \\
-     & W_{11, 3} = \max \{32; 7 + 20; 14 + 8\} = 32, \quad x_{11, 3}^0 = 0                                                                      \\
-     & W_{12, 3} = \max \{36; 7 + 24; 14 + 12; 21 + 0\} = 36, \quad x_{12, 3}^0 = 0                                                             \\
-     & W_{13, 3} = \max \{38; 7 + 26; 14 + 14; 21 + 0\} = 38, \quad x_{13, 3}^0 = 0                                                             \\
+     & W_{93} = \max \{26; 7 + 14; 14 + 0\} = 26, \quad x_{93}^0 = 0
+\end{align*}
+\begin{align*}
+     & W_{10, 3} = \max \{30; 7 + 18; 14 + 6\} = 30, \quad x_{10, 3}^0 = 0          \\
+     & W_{11, 3} = \max \{32; 7 + 20; 14 + 8\} = 32, \quad x_{11, 3}^0 = 0          \\
+     & W_{12, 3} = \max \{36; 7 + 24; 14 + 12; 21 + 0\} = 36, \quad x_{12, 3}^0 = 0 \\
+     & W_{13, 3} = \max \{38; 7 + 26; 14 + 14; 21 + 0\} = 38, \quad x_{13, 3}^0 = 0 \\
      & W_{14, 3} = \max \{42; 7 + 30; 14 + 18; 21 + 6\} = 42, \quad x_{14, 3}^0 = 0
 \end{align*}
 
@@ -575,9 +577,10 @@ $P_4 = 5, \quad V_4 = 10$
     \end{tabular}
 \end{table}
 
-$P_5 = 3, \quad V_5 = 9$
-
 \begin{table}[H]
+    \begin{flushleft}
+        $P_5 = 3, \quad V_5 = 9$
+    \end{flushleft}
     \centering
     \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|c|}
         \hline \rowcolor{lightgray}
@@ -614,10 +617,6 @@ $P_5 = 3, \quad V_5 = 9$
         14  & 42       & 41             & 42              & 41              & 42              & 42              & 0                    \\
         \hline
     \end{tabular}
-\end{table}
-
-\begin{table}[H]
-    \centering
     \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|>{\columncolor{mycolumncolor}}c|}
         \hline \rowcolor{lightgray}
         $F$   & 1 & 2 & 3 & 4  & 5 & 6  \\
@@ -702,14 +701,13 @@ $P_5 = 3, \quad V_5 = 9$
 \end{table}
 
 \begin{align*}
-     & P_6 = 6, \quad V_6 = 12 \\
-    W_n(S) = \max\limits_{0 \leq x_6P_6 \leq S} \{x_6V_6 + W_{(S - x_6P_6)5}\}
+     & W_n(S) = \max\limits_{0 \leq x_6P_6 \leq S} \{x_6V_6 + W_{(S - x_6P_6)5}\}                                                                     \\
+     & P_6 = 6, \quad V_6 = 12                                                                                                                        \\
+     & \begin{aligned}
+           W_6(14) = W_{14, 6} & = \max\limits_{0 \leq 6x_6 \leq 14} \{12x_6 + W_{(14 - 6x_6)5}\} = \max\{0 + W_{14, 5}; 12 + W_{8, 5}; 24 + W_{2, 5}\} = \\
+                               & = \max\{42; 36; 30\} = 42, \quad x_{14, 6}^0 = 0
+       \end{aligned}
 \end{align*}
-
-\begin{multline*}
-    W_6(14) = W_{14, 6} = \max\limits_{0 \leq 6x_6 \leq 14} \{12x_6 + W_{(14 - 6x_6)5}\} = \max\{0 + W_{14, 5}; 12 + W_{8, 5}; 24 + W_{2, 5}\} = \\
-    = \max\{42; 36; 30\} = 42, \quad x_{14, 6}^0 = 0
-\end{multline*}
 
 \begin{table}[H]
     \centering
