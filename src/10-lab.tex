@@ -1,0 +1,848 @@
+\section{Задание №10}\label{10-lab}
+
+\subsection{Условие}\label{10-lab-condition}
+
+Придумать задачу о рюкзаке на 6 типов предметов, где каждый предмет имеет свою стоимость и вес.
+Грузоподъемность рюкзака произвольная.
+
+Решить задачу динамическим программированием.
+
+\subsection{Постановка задачи}\label{10-lab-statement}
+
+$S = 14$ --- грузоподъемность рюкзака.
+
+$n = 6$ --- количество предметов.
+
+$P_j$, $V_j$ --- вес и стоимость одного предмета $j$-го типа соответственно.
+
+Зададим стоимость и вес каждого предмета в виде матрицы $F = \begin{pmatrix} \overrightarrow j\\ \overrightarrow P\\ \overrightarrow V\\ \end{pmatrix}$ и представим её в виде таблицы:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $j$   & 1 & 2 & 3 & 4  & 5 & 6  \\
+        \hline
+        $P_j$ & 2 & 3 & 4 & 5  & 3 & 6  \\
+        \hline
+        $V_j$ & 6 & 8 & 7 & 10 & 9 & 12 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Пусть мы взяли $x_j$ штук предмета $j$-го типа. Тогда общая стоимость предметов в рюкзаке равна $W(x) = \sum\limits_{j=1}^{n} x_j V_j$.
+
+Задача состоит в том, чтобы взять такое количество предметов разных типов $\overrightarrow x = (x_1, x_2, \dots, x_n)$, чтобы общая стоимость предметов в рюкзаке была максимальной $W(x) \to \max$
+при условии того, что общий вес предметов в рюкзаке не превышает грузоподъемность рюкзака: $\sum\limits_{j=1}^{n} x_j P_j \leq S$ и $x_j \in \N_0 \quad \forall j = \overline{1, n}$.
+
+\subsection{Решение}\label{10-lab-solution}
+
+Вводим следующие обозначения:
+
+$W_j(i) = W_{ij}$ --- максимальная стоимость предметов, общий вес которых не более $i$, которые можно уложить в рюкзак, если взять только первые $j$ типов предметов, то есть
+$j = \overline{1, n-1}$, $i = \overline{0, S}$.
+
+Их можно записать в виде матрицы $W = \|W_{ij}\|_{(S+1) \times (n-1)}$, которую мы представим в виде таблицы:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{$i$}{$j$} & 1        & 2        & 3        & 4        & 5        \\
+        \hline
+        0                       &          &          &          &          &          \\
+        \hline
+        1                       &          &          &          &          &          \\
+        \hline
+        2                       &          &          &          &          &          \\
+        \hline
+        3                       &          &          &          &          &          \\
+        \hline
+        4                       &          &          &          &          &          \\
+        \hline
+        $\vdots$                & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ \\
+        \hline
+        14                      &          &          &          &          &          \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Получаем следующие рекуррентные соотношения для заполнения матрицы $W$:
+
+\begin{align*}
+     & W_{i1} = W_1(i) = \max\limits_{0 \leq x_1P_1 \leq i} \left\{x_1V_1\right\}, \quad i = \overline{0, S}                                                        \\
+     & \begin{aligned}
+           W_{ij} = W_j(i) & = \max\limits_{0 \leq x_jP_j \leq i} \left\{x_jV_j + W_{j-1}(i - x_jP_j)\right\} =                                                         \\
+                           & = \max\limits_{0 \leq x_jP_j \leq i} \left\{x_jV_j + W_{(i - x_jP_j)(j-1)}\right\}, \quad j = \overline{2, n-1}, \quad i = \overline{0, S}
+       \end{aligned}.
+\end{align*}
+
+После её заполнения можно найти максимальную стоимость предметов, которые можно уложить в рюкзак, если брать предметы всех типов: $W_n(S)$.
+
+\[ W_n(S) = \max\limits_{0 \leq x_nP_n \leq S} \left\{x_nV_n + W_{n-1}(S - x_nP_n)\right\} = \max\limits_{0 \leq x_nP_n \leq S} \left\{x_nV_n + W_{(S - x_nP_n)(n-1)}\right\} \]
+
+При этом можно восстановить оптимальное решение $X^* = \begin{pmatrix} x_1^*, x_2^*, \dots, x_n^* \end{pmatrix}$, используя следующие соотношения:
+
+\begin{align*}
+     & x_n^* = \argmax\limits_{0 \leq x_nP_n \leq S} \left\{x_nV_n + W_{n-1}(S - x_nP_n)\right\} = \argmax W_n(S) = \argmax W_{Sn}                                                                                        \\
+     & \begin{aligned}
+           x_j^* & = \argmax\limits_{0 \leq x_j^* P_j \leq S - x_n^*P_n - x_{n-1}^*P_{n-1} - \dots - x_{j+1}^*P_{j+1}} \left\{x_jV_j + W_{j-1}(S - x_n^*P_n - x_{n-1}^*P_{n-1} - \dots - x_{j+1}^*P_{j+1} - x_jP_j)\right\} = \\
+                 & = \argmax W_j(S - x_n^*P_n - x_{n-1}^*P_{n-1} - \dots - x_{j+1}^*P_{j+1}) = \argmax W_{(S - x_n^*P_n - x_{n-1}^*P_{n-1} - \dots - x_{j+1}^*P_{j+1})j},                                                     \\
+                 & \quad j = \overline{n-1, 1}
+       \end{aligned}
+\end{align*}
+
+Поэтому проще также ввести матрицу для аргументов $X^0 = \| x_{ij}^0 \|_{(S+1) \times (n-1)}$, где $x_{ij}^0 = \argmax W_{ij}$ которую мы представим в виде таблицы:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        \backslashbox{$i$}{$j$} & 1        & 2        & 3        & 4        & 5        \\
+        \hline
+        0                       &          &          &          &          &          \\
+        \hline
+        1                       &          &          &          &          &          \\
+        \hline
+        2                       &          &          &          &          &          \\
+        \hline
+        3                       &          &          &          &          &          \\
+        \hline
+        4                       &          &          &          &          &          \\
+        \hline
+        $\vdots$                & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ \\
+        \hline
+        14                      &          &          &          &          &          \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Получаем следующие рекуррентные соотношения для нахождения оптимального решения $X^* = \begin{pmatrix} x_1^*, x_2^*, \dots, x_n^* \end{pmatrix}$:
+
+\begin{align*}
+     & x_n^* = x_{Sn}^0,                                                                                         \\
+     & x_j^* = x_{(S - x_n^*P_n - x_{n-1}^*P_{n-1} - \dots - x_{j+1}^*P_{j+1})j}^0, \quad j = \overline{n-1, 1}.
+\end{align*}
+
+Начнем динамическое программирование:
+
+\begin{align*}
+     & P_1 = 2, \quad V_1 = 6                                                                                                                         \\
+     & W_{i1} = W_1(i) = \max\limits_{0 \leq x_1P_1 \leq i} \left\{x_1V_1\right\}, \quad i = \overline{0, S}                                          \\
+     & W_{01} = \max\limits_{0 \leq 2x_1 \leq 0} \left\{6x_1\right\} = \max \left\{0\right\} = 0, \quad x_{01}^0 = 0                                  \\
+     & W_{11} = \max\limits_{0 \leq 2x_1 \leq 1} \left\{6x_1\right\} = \max \left\{0\right\} = 0, \quad x_{11}^0 = 0                                  \\
+     & W_{21} = \max\limits_{0 \leq 2x_1 \leq 2} \left\{6x_1\right\} = \max \left\{0; 6\right\} = 6, \quad x_{21}^0 = 1                               \\
+     & W_{31} = \max\limits_{0 \leq 2x_1 \leq 3} \left\{6x_1\right\} = \max \left\{0; 6\right\} = 6, \quad x_{31}^0 = 1                               \\
+     & W_{41} = \max\limits_{0 \leq 2x_1 \leq 4} \left\{6x_1\right\} = \max \left\{0; 6; 12\right\} = 12, \quad x_{41}^0 = 2                          \\
+     & W_{51} = \max\limits_{0 \leq 2x_1 \leq 5} \left\{6x_1\right\} = \max \left\{0; 6; 12\right\} = 12, \quad x_{51}^0 = 2                          \\
+     & W_{61} = \max\limits_{0 \leq 2x_1 \leq 6} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18\right\} = 18, \quad x_{61}^0 = 3                      \\
+     & W_{71} = \max\limits_{0 \leq 2x_1 \leq 7} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18\right\} = 18, \quad x_{71}^0 = 3                      \\
+     & W_{81} = \max\limits_{0 \leq 2x_1 \leq 8} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18; 24\right\} = 24, \quad x_{81}^0 = 4                  \\
+     & W_{91} = \max\limits_{0 \leq 2x_1 \leq 9} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18; 24\right\} = 24, \quad x_{91}^0 = 4                  \\
+     & W_{10, 1} = \max\limits_{0 \leq 2x_1 \leq 10} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18; 24; 30\right\} = 30, \quad x_{101}^0 = 5         \\
+     & W_{11, 1} = \max\limits_{0 \leq 2x_1 \leq 11} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18; 24; 30\right\} = 30, \quad x_{111}^0 = 5         \\
+     & W_{12, 1} = \max\limits_{0 \leq 2x_1 \leq 12} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18; 24; 30; 36\right\} = 36, \quad x_{121}^0 = 6     \\
+     & W_{13, 1} = \max\limits_{0 \leq 2x_1 \leq 13} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18; 24; 30; 36\right\} = 36, \quad x_{131}^0 = 6     \\
+     & W_{14, 1} = \max\limits_{0 \leq 2x_1 \leq 14} \left\{6x_1\right\} = \max \left\{0; 6; 12; 18; 24; 30; 36; 42\right\} = 42, \quad x_{141}^0 = 7
+\end{align*}
+
+И будем заполнять таблицы $W$ и $X^0$, таская за собой таблицу $F$. На следующем шаге будем использовать столбцы $F_{2 \downarrow}$ и $W_{1 \downarrow}$, поэтому они выделены цветом.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|>{\columncolor{mycolumncolor}}c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $F$   & 1 & 2 & 3 & 4  & 5 & 6  \\
+        \hline
+        $P_j$ & 2 & 3 & 4 & 5  & 3 & 6  \\
+        \hline
+        $V_j$ & 6 & 8 & 7 & 10 & 9 & 12 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|>{\columncolor{mycolumncolor}}c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1  & 2 & 3 & 4 & 5 \\
+        \hline
+        0   & 0  &   &   &   &   \\
+        \hline
+        1   & 0  &   &   &   &   \\
+        \hline
+        2   & 6  &   &   &   &   \\
+        \hline
+        3   & 6  &   &   &   &   \\
+        \hline
+        4   & 12 &   &   &   &   \\
+        \hline
+        5   & 12 &   &   &   &   \\
+        \hline
+        6   & 18 &   &   &   &   \\
+        \hline
+        7   & 18 &   &   &   &   \\
+        \hline
+        8   & 24 &   &   &   &   \\
+        \hline
+        9   & 24 &   &   &   &   \\
+        \hline
+        10  & 30 &   &   &   &   \\
+        \hline
+        11  & 30 &   &   &   &   \\
+        \hline
+        12  & 36 &   &   &   &   \\
+        \hline
+        13  & 36 &   &   &   &   \\
+        \hline
+        14  & 42 &   &   &   &   \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0     & 0 &   &   &   &   \\
+        \hline
+        1     & 0 &   &   &   &   \\
+        \hline
+        2     & 1 &   &   &   &   \\
+        \hline
+        3     & 1 &   &   &   &   \\
+        \hline
+        4     & 2 &   &   &   &   \\
+        \hline
+        5     & 2 &   &   &   &   \\
+        \hline
+        6     & 3 &   &   &   &   \\
+        \hline
+        7     & 3 &   &   &   &   \\
+        \hline
+        8     & 4 &   &   &   &   \\
+        \hline
+        9     & 4 &   &   &   &   \\
+        \hline
+        10    & 5 &   &   &   &   \\
+        \hline
+        11    & 5 &   &   &   &   \\
+        \hline
+        12    & 6 &   &   &   &   \\
+        \hline
+        13    & 6 &   &   &   &   \\
+        \hline
+        14    & 7 &   &   &   &   \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+     & P_2 = 3, \quad V_2 = 8                                                                                                                                                          \\
+     & W_{i2} = \max\limits_{0 \leq x_2P_2 \leq i} \left\{x_2V_2 + W_{(i - x_2P_2)1}\right\}, \quad i = \overline{0, S}                                                                \\
+     & W_{02} = \max\limits_{0 \leq 3x_2 \leq 0} \left\{8x_2 + W_{(0 - 3x_2)1}\right\} = \max \left\{0 + W_{01}\right\} = \max \left\{0\right\} = 0, \quad x_{02}^0 = 0                \\
+     & W_{12} = \max\limits_{0 \leq 3x_2 \leq 1} \left\{8x_2 + W_{(1 - 3x_2)1}\right\} = \max \left\{0 + W_{11}\right\} = \max \left\{0\right\} = 0, \quad x_{12}^0 = 0                \\
+     & W_{22} = \max\limits_{0 \leq 3x_2 \leq 2} \left\{8x_2 + W_{(2 - 3x_2)1}\right\} = \max \left\{0 + W_{21}\right\} = \max \left\{6\right\} = 6, \quad x_{22}^0 = 0                \\
+     & W_{32} = \max\limits_{0 \leq 3x_2 \leq 3} \left\{8x_2 + W_{(3 - 3x_2)1}\right\} = \max \left\{0 + W_{31}; 8 + W_{01}\right\} = \max \left\{6; 8\right\} = 8, \quad x_{32}^0 = 1 \\
+     & W_{42} = \max \left\{0 + W_{41}; 8 + W_{11}\right\} = \max \left\{12; 8\right\} = 12, \quad x_{42}^0 = 0                                                                        \\
+     & W_{52} = \max \left\{0 + W_{51}; 8 + W_{21}\right\} = \max \left\{12; 14\right\} = 14, \quad x_{52}^0 = 1                                                                       \\
+     & W_{62} = \max \left\{0 + W_{61}; 8 + W_{31}; 16 + W_{01}\right\} = \max \left\{18; 14; 16\right\} = 18, \quad x_{62}^0 = 0                                                      \\
+\end{align*}
+\begin{align*}
+     & W_{72} = \max \left\{0 + W_{71}; 8 + W_{41}; 16 + W_{11}\right\} = \max \left\{18; 20; 16\right\} = 20, \quad x_{72}^0 = 1     \\
+     & W_{82} = \max \left\{0 + W_{81}; 8 + W_{51}; 16 + W_{21}\right\} = \max \left\{24; 20; 22\right\} = 24, \quad x_{82}^0 = 0     \\
+     & W_{92} = \max \{0 + W_{91}; 8 + W_{61}; 16 + W_{31}; 24 + W_01\} = \max \{24; 26; 22; 24\} = 26, \quad x_{92}^0 = 1            \\
+     & W_{10, 2} = \max \{0 + W_{10, 1}; 8 + W_{71}; 16 + W_{41}; 24 + W_{11}\} = \max \{30; 26; 28; 24\} = 30, \quad x_{10, 2}^0 = 0 \\
+     & W_{11, 2} = \max \{0 + W_{11, 1}; 8 + W_{81}; 16 + W_{51}; 24 + W_{21}\} = \max \{30; 32; 28; 30\} = 32, \quad x_{11, 2}^0 = 1 \\
+     & W_{12, 2} = \max \{36; 32; 34; 30; 32\} = 36, \quad x_{12, 2}^0 = 0                                                            \\
+     & W_{13, 2} = \max \{36; 38; 34; 36; 32\} = 38, \quad x_{13, 2}^0 = 1                                                            \\
+     & W_{14, 2} = \max \{42; 38; 40; 36; 38\} = 42, \quad x_{14, 2}^0 = 0
+\end{align*}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|>{\columncolor{mycolumncolor}}c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $F$   & 1 & 2 & 3 & 4  & 5 & 6  \\
+        \hline
+        $P_j$ & 2 & 3 & 4 & 5  & 3 & 6  \\
+        \hline
+        $V_j$ & 6 & 8 & 7 & 10 & 9 & 12 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|>{\columncolor{mycolumncolor}}c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1  & 2  & 3 & 4 & 5 \\
+        \hline
+        0   & 0  & 0  &   &   &   \\
+        \hline
+        1   & 0  & 0  &   &   &   \\
+        \hline
+        2   & 6  & 6  &   &   &   \\
+        \hline
+        3   & 6  & 8  &   &   &   \\
+        \hline
+        4   & 12 & 12 &   &   &   \\
+        \hline
+        5   & 12 & 14 &   &   &   \\
+        \hline
+        6   & 18 & 18 &   &   &   \\
+        \hline
+        7   & 18 & 20 &   &   &   \\
+        \hline
+        8   & 24 & 24 &   &   &   \\
+        \hline
+        9   & 24 & 26 &   &   &   \\
+        \hline
+        10  & 30 & 30 &   &   &   \\
+        \hline
+        11  & 30 & 32 &   &   &   \\
+        \hline
+        12  & 36 & 36 &   &   &   \\
+        \hline
+        13  & 36 & 38 &   &   &   \\
+        \hline
+        14  & 42 & 42 &   &   &   \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0     & 0 & 0 &   &   &   \\
+        \hline
+        1     & 0 & 0 &   &   &   \\
+        \hline
+        2     & 1 & 0 &   &   &   \\
+        \hline
+        3     & 1 & 1 &   &   &   \\
+        \hline
+        4     & 2 & 0 &   &   &   \\
+        \hline
+        5     & 2 & 1 &   &   &   \\
+        \hline
+        6     & 3 & 0 &   &   &   \\
+        \hline
+        7     & 3 & 1 &   &   &   \\
+        \hline
+        8     & 4 & 0 &   &   &   \\
+        \hline
+        9     & 4 & 1 &   &   &   \\
+        \hline
+        10    & 5 & 0 &   &   &   \\
+        \hline
+        11    & 5 & 1 &   &   &   \\
+        \hline
+        12    & 6 & 0 &   &   &   \\
+        \hline
+        13    & 6 & 1 &   &   &   \\
+        \hline
+        14    & 7 & 0 &   &   &   \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+     & P_3 = 4, \quad V_3 = 7                                                                                                                   \\
+     & W_{i3} = \max\limits_{0 \leq x_3P_3 \leq i} \left\{x_3V_3 + W_{(i - x_3P_3)2}\right\}, \quad i = \overline{0, S}                         \\
+     & W_{03} = \max\limits_{0 \leq 4x_3 \leq 0} \left\{7x_3 + W_{(0 - 4x_3)2}\right\} = \max \left\{0 + W_{02}\right\} = 0, \quad x_{03}^0 = 0 \\
+     & W_{13} = \max \{0\} = 0, \quad x_{13}^0 = 0                                                                                              \\
+     & W_{23} = \max \{6\} = 6, \quad x_{23}^0 = 0                                                                                              \\
+     & W_{33} = \max \{8\} = 8, \quad x_{33}^0 = 0                                                                                              \\
+     & W_{43} = \max \{12; 7 + 0\} = 12, \quad x_{43}^0 = 0                                                                                     \\
+     & W_{53} = \max \{14; 7 + 0\} = 14, \quad x_{53}^0 = 0                                                                                     \\
+     & W_{63} = \max \{18; 7 + 6\} = 18, \quad x_{63}^0 = 0                                                                                     \\
+     & W_{73} = \max \{20; 7 + 8\} = 20, \quad x_{73}^0 = 0                                                                                     \\
+     & W_{83} = \max \{24; 7 + 12; 14 + 0\} = 24, \quad x_{83}^0 = 0                                                                            \\
+     & W_{93} = \max \{26; 7 + 14; 14 + 0\} = 26, \quad x_{93}^0 = 0                                                                            \\
+     & W_{10, 3} = \max \{30; 7 + 18; 14 + 6\} = 30, \quad x_{10, 3}^0 = 0                                                                      \\
+     & W_{11, 3} = \max \{32; 7 + 20; 14 + 8\} = 32, \quad x_{11, 3}^0 = 0                                                                      \\
+     & W_{12, 3} = \max \{36; 7 + 24; 14 + 12; 21 + 0\} = 36, \quad x_{12, 3}^0 = 0                                                             \\
+     & W_{13, 3} = \max \{38; 7 + 26; 14 + 14; 21 + 0\} = 38, \quad x_{13, 3}^0 = 0                                                             \\
+     & W_{14, 3} = \max \{42; 7 + 30; 14 + 18; 21 + 6\} = 42, \quad x_{14, 3}^0 = 0
+\end{align*}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|>{\columncolor{mycolumncolor}}c|c|c|}
+        \hline \rowcolor{lightgray}
+        $F$   & 1 & 2 & 3 & 4  & 5 & 6  \\
+        \hline
+        $P_j$ & 2 & 3 & 4 & 5  & 3 & 6  \\
+        \hline
+        $V_j$ & 6 & 8 & 7 & 10 & 9 & 12 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|>{\columncolor{mycolumncolor}}c|c|c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1  & 2  & 3  & 4 & 5 \\
+        \hline
+        0   & 0  & 0  & 0  &   &   \\
+        \hline
+        1   & 0  & 0  & 0  &   &   \\
+        \hline
+        2   & 6  & 6  & 6  &   &   \\
+        \hline
+        3   & 6  & 8  & 8  &   &   \\
+        \hline
+        4   & 12 & 12 & 12 &   &   \\
+        \hline
+        5   & 12 & 14 & 14 &   &   \\
+        \hline
+        6   & 18 & 18 & 18 &   &   \\
+        \hline
+        7   & 18 & 20 & 20 &   &   \\
+        \hline
+        8   & 24 & 24 & 24 &   &   \\
+        \hline
+        9   & 24 & 26 & 26 &   &   \\
+        \hline
+        10  & 30 & 30 & 30 &   &   \\
+        \hline
+        11  & 30 & 32 & 32 &   &   \\
+        \hline
+        12  & 36 & 36 & 36 &   &   \\
+        \hline
+        13  & 36 & 38 & 38 &   &   \\
+        \hline
+        14  & 42 & 42 & 42 &   &   \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0     & 0 & 0 & 0 &   &   \\
+        \hline
+        1     & 0 & 0 & 0 &   &   \\
+        \hline
+        2     & 1 & 0 & 0 &   &   \\
+        \hline
+        3     & 1 & 1 & 0 &   &   \\
+        \hline
+        4     & 2 & 0 & 0 &   &   \\
+        \hline
+        5     & 2 & 1 & 0 &   &   \\
+        \hline
+        6     & 3 & 0 & 0 &   &   \\
+        \hline
+        7     & 3 & 1 & 0 &   &   \\
+        \hline
+        8     & 4 & 0 & 0 &   &   \\
+        \hline
+        9     & 4 & 1 & 0 &   &   \\
+        \hline
+        10    & 5 & 0 & 0 &   &   \\
+        \hline
+        11    & 5 & 1 & 0 &   &   \\
+        \hline
+        12    & 6 & 0 & 0 &   &   \\
+        \hline
+        13    & 6 & 1 & 0 &   &   \\
+        \hline
+        14    & 7 & 0 & 0 &   &   \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Далее будем большое количество строк представлять в виде таблицы, где каждый столбец смещается вниз на $P_j$
+вниз строк относительно предыдущего столбца, и к этому столбцу прибавляется $V_j$ относительно предыдущего столбца.
+Далее находим максимумы в каждой строке и заполняем таблицу $W$ и $X^0$.
+
+$P_4 = 5, \quad V_4 = 10$
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $i$ & $W_{i3}$ & $W_{i3} + V_4$ & $W_{i3} + 2V_4$ & $\max = W_{i4}$ & $\argmax = X_{i4}^0$ \\
+        \hline
+        0   & 0        &                &                 & 0               & 0                    \\
+        \hline
+        1   & 0        &                &                 & 0               & 0                    \\
+        \hline
+        2   & 6        &                &                 & 6               & 0                    \\
+        \hline
+        3   & 8        &                &                 & 8               & 0                    \\
+        \hline
+        4   & 12       &                &                 & 12              & 0                    \\
+        \hline
+        5   & 14       & 10             &                 & 14              & 0                    \\
+        \hline
+        6   & 18       & 10             &                 & 18              & 0                    \\
+        \hline
+        7   & 20       & 16             &                 & 20              & 0                    \\
+        \hline
+        8   & 24       & 18             &                 & 24              & 0                    \\
+        \hline
+        9   & 26       & 22             &                 & 26              & 0                    \\
+        \hline
+        10  & 30       & 24             & 20              & 30              & 0                    \\
+        \hline
+        11  & 32       & 28             & 20              & 32              & 0                    \\
+        \hline
+        12  & 36       & 30             & 26              & 36              & 0                    \\
+        \hline
+        13  & 38       & 34             & 28              & 38              & 0                    \\
+        \hline
+        14  & 42       & 36             & 32              & 42              & 0                    \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|>{\columncolor{mycolumncolor}}c|c|}
+        \hline \rowcolor{lightgray}
+        $F$   & 1 & 2 & 3 & 4  & 5 & 6  \\
+        \hline
+        $P_j$ & 2 & 3 & 4 & 5  & 3 & 6  \\
+        \hline
+        $V_j$ & 6 & 8 & 7 & 10 & 9 & 12 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|>{\columncolor{mycolumncolor}}c|c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1  & 2  & 3  & 4  & 5 \\
+        \hline
+        0   & 0  & 0  & 0  & 0  &   \\
+        \hline
+        1   & 0  & 0  & 0  & 0  &   \\
+        \hline
+        2   & 6  & 6  & 6  & 6  &   \\
+        \hline
+        3   & 6  & 8  & 8  & 8  &   \\
+        \hline
+        4   & 12 & 12 & 12 & 12 &   \\
+        \hline
+        5   & 12 & 14 & 14 & 14 &   \\
+        \hline
+        6   & 18 & 18 & 18 & 18 &   \\
+        \hline
+        7   & 18 & 20 & 20 & 20 &   \\
+        \hline
+        8   & 24 & 24 & 24 & 24 &   \\
+        \hline
+        9   & 24 & 26 & 26 & 26 &   \\
+        \hline
+        10  & 30 & 30 & 30 & 30 &   \\
+        \hline
+        11  & 30 & 32 & 32 & 32 &   \\
+        \hline
+        12  & 36 & 36 & 36 & 36 &   \\
+        \hline
+        13  & 36 & 38 & 38 & 38 &   \\
+        \hline
+        14  & 42 & 42 & 42 & 42 &   \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0     & 0 & 0 & 0 & 0 &   \\
+        \hline
+        1     & 0 & 0 & 0 & 0 &   \\
+        \hline
+        2     & 1 & 0 & 0 & 0 &   \\
+        \hline
+        3     & 1 & 1 & 0 & 0 &   \\
+        \hline
+        4     & 2 & 0 & 0 & 0 &   \\
+        \hline
+        5     & 2 & 1 & 0 & 0 &   \\
+        \hline
+        6     & 3 & 0 & 0 & 0 &   \\
+        \hline
+        7     & 3 & 1 & 0 & 0 &   \\
+        \hline
+        8     & 4 & 0 & 0 & 0 &   \\
+        \hline
+        9     & 4 & 1 & 0 & 0 &   \\
+        \hline
+        10    & 5 & 0 & 0 & 0 &   \\
+        \hline
+        11    & 5 & 1 & 0 & 0 &   \\
+        \hline
+        12    & 6 & 0 & 0 & 0 &   \\
+        \hline
+        13    & 6 & 1 & 0 & 0 &   \\
+        \hline
+        14    & 7 & 0 & 0 & 0 &   \\
+        \hline
+    \end{tabular}
+\end{table}
+
+$P_5 = 3, \quad V_5 = 9$
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $i$ & $W_{i4}$ & $W_{i4} + V_5$ & $W_{i4} + 2V_5$ & $W_{i4} + 3V_5$ & $W_{i4} + 4V_5$ & $\max = W_{i5}$ & $\argmax = X_{i5}^0$ \\
+        \hline
+        0   & 0        &                &                 &                 &                 & 0               & 0                    \\
+        \hline
+        1   & 0        &                &                 &                 &                 & 0               & 0                    \\
+        \hline
+        2   & 6        &                &                 &                 &                 & 6               & 0                    \\
+        \hline
+        3   & 8        & 9              &                 &                 &                 & 9               & 1                    \\
+        \hline
+        4   & 12       & 9              &                 &                 &                 & 12              & 0                    \\
+        \hline
+        5   & 14       & 15             &                 &                 &                 & 15              & 1                    \\
+        \hline
+        6   & 18       & 17             & 18              &                 &                 & 18              & 0                    \\
+        \hline
+        7   & 20       & 21             & 18              &                 &                 & 21              & 1                    \\
+        \hline
+        8   & 24       & 23             & 24              &                 &                 & 24              & 0                    \\
+        \hline
+        9   & 26       & 27             & 26              & 27              &                 & 27              & 1                    \\
+        \hline
+        10  & 30       & 29             & 30              & 27              &                 & 30              & 0                    \\
+        \hline
+        11  & 32       & 33             & 32              & 33              &                 & 33              & 1                    \\
+        \hline
+        12  & 36       & 35             & 36              & 35              & 36              & 36              & 0                    \\
+        \hline
+        13  & 38       & 39             & 38              & 39              & 36              & 39              & 1                    \\
+        \hline
+        14  & 42       & 41             & 42              & 41              & 42              & 42              & 0                    \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|>{\columncolor{mycolumncolor}}c|}
+        \hline \rowcolor{lightgray}
+        $F$   & 1 & 2 & 3 & 4  & 5 & 6  \\
+        \hline
+        $P_j$ & 2 & 3 & 4 & 5  & 3 & 6  \\
+        \hline
+        $V_j$ & 6 & 8 & 7 & 10 & 9 & 12 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|>{\columncolor{mycolumncolor}}c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1  & 2  & 3  & 4  & 5  \\
+        \hline
+        0   & 0  & 0  & 0  & 0  & 0  \\
+        \hline
+        1   & 0  & 0  & 0  & 0  & 0  \\
+        \hline
+        2   & 6  & 6  & 6  & 6  & 6  \\
+        \hline
+        3   & 6  & 8  & 8  & 8  & 9  \\
+        \hline
+        4   & 12 & 12 & 12 & 12 & 12 \\
+        \hline
+        5   & 12 & 14 & 14 & 14 & 15 \\
+        \hline
+        6   & 18 & 18 & 18 & 18 & 18 \\
+        \hline
+        7   & 18 & 20 & 20 & 20 & 21 \\
+        \hline
+        8   & 24 & 24 & 24 & 24 & 24 \\
+        \hline
+        9   & 24 & 26 & 26 & 26 & 27 \\
+        \hline
+        10  & 30 & 30 & 30 & 30 & 30 \\
+        \hline
+        11  & 30 & 32 & 32 & 32 & 33 \\
+        \hline
+        12  & 36 & 36 & 36 & 36 & 36 \\
+        \hline
+        13  & 36 & 38 & 38 & 38 & 39 \\
+        \hline
+        14  & 42 & 42 & 42 & 42 & 42 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        0     & 0 & 0 & 0 & 0 & 0 \\
+        \hline
+        1     & 0 & 0 & 0 & 0 & 0 \\
+        \hline
+        2     & 1 & 0 & 0 & 0 & 0 \\
+        \hline
+        3     & 1 & 1 & 0 & 0 & 1 \\
+        \hline
+        4     & 2 & 0 & 0 & 0 & 0 \\
+        \hline
+        5     & 2 & 1 & 0 & 0 & 1 \\
+        \hline
+        6     & 3 & 0 & 0 & 0 & 0 \\
+        \hline
+        7     & 3 & 1 & 0 & 0 & 1 \\
+        \hline
+        8     & 4 & 0 & 0 & 0 & 0 \\
+        \hline
+        9     & 4 & 1 & 0 & 0 & 1 \\
+        \hline
+        10    & 5 & 0 & 0 & 0 & 0 \\
+        \hline
+        11    & 5 & 1 & 0 & 0 & 1 \\
+        \hline
+        12    & 6 & 0 & 0 & 0 & 0 \\
+        \hline
+        13    & 6 & 1 & 0 & 0 & 1 \\
+        \hline
+        14    & 7 & 0 & 0 & 0 & 0 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+     & P_6 = 6, \quad V_6 = 12 \\
+    W_n(S) = \max\limits_{0 \leq x_6P_6 \leq S} \{x_6V_6 + W_{(S - x_6P_6)5}\}
+\end{align*}
+
+\begin{multline*}
+    W_6(14) = W_{14, 6} = \max\limits_{0 \leq 6x_6 \leq 14} \{12x_6 + W_{(14 - 6x_6)5}\} = \max\{0 + W_{14, 5}; 12 + W_{8, 5}; 24 + W_{2, 5}\} = \\
+    = \max\{42; 36; 30\} = 42, \quad x_{14, 6}^0 = 0
+\end{multline*}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $F$   & 1 & 2 & 3 & 4  & 5 & 6  \\
+        \hline
+        $P_j$ & 2 & 3 & 4 & 5  & 3 & 6  \\
+        \hline
+        $V_j$ & 6 & 8 & 7 & 10 & 9 & 12 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $W$ & 1  & 2  & 3  & 4  & 5  & 6              \\
+        \hline
+        0   & 0  & 0  & 0  & 0  & 0  &                \\
+        \hline
+        1   & 0  & 0  & 0  & 0  & 0  &                \\
+        \hline
+        2   & 6  & 6  & 6  & 6  & 6  &                \\
+        \hline
+        3   & 6  & 8  & 8  & 8  & 9  &                \\
+        \hline
+        4   & 12 & 12 & 12 & 12 & 12 &                \\
+        \hline
+        5   & 12 & 14 & 14 & 14 & 15 &                \\
+        \hline
+        6   & 18 & 18 & 18 & 18 & 18 &                \\
+        \hline
+        7   & 18 & 20 & 20 & 20 & 21 &                \\
+        \hline
+        8   & 24 & 24 & 24 & 24 & 24 &                \\
+        \hline
+        9   & 24 & 26 & 26 & 26 & 27 &                \\
+        \hline
+        10  & 30 & 30 & 30 & 30 & 30 &                \\
+        \hline
+        11  & 30 & 32 & 32 & 32 & 33 &                \\
+        \hline
+        12  & 36 & 36 & 36 & 36 & 36 &                \\
+        \hline
+        13  & 36 & 38 & 38 & 38 & 39 &                \\
+        \hline
+        14  & 42 & 42 & 42 & 42 & 42 & \mycellcolor42 \\
+        \hline
+    \end{tabular}
+    \hfill
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $X^0$ & 1 & 2 & 3 & 4 & 5 & 6             \\
+        \hline
+        0     & 0 & 0 & 0 & 0 & 0 &               \\
+        \hline
+        1     & 0 & 0 & 0 & 0 & 0 &               \\
+        \hline
+        2     & 1 & 0 & 0 & 0 & 0 &               \\
+        \hline
+        3     & 1 & 1 & 0 & 0 & 1 &               \\
+        \hline
+        4     & 2 & 0 & 0 & 0 & 0 &               \\
+        \hline
+        5     & 2 & 1 & 0 & 0 & 1 &               \\
+        \hline
+        6     & 3 & 0 & 0 & 0 & 0 &               \\
+        \hline
+        7     & 3 & 1 & 0 & 0 & 1 &               \\
+        \hline
+        8     & 4 & 0 & 0 & 0 & 0 &               \\
+        \hline
+        9     & 4 & 1 & 0 & 0 & 1 &               \\
+        \hline
+        10    & 5 & 0 & 0 & 0 & 0 &               \\
+        \hline
+        11    & 5 & 1 & 0 & 0 & 1 &               \\
+        \hline
+        12    & 6 & 0 & 0 & 0 & 0 &               \\
+        \hline
+        13    & 6 & 1 & 0 & 0 & 1 &               \\
+        \hline
+        14    & 7 & 0 & 0 & 0 & 0 & \mycellcolor0 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+     & x_n^* = x_{Sn}^0,                                                                                         \\
+     & x_j^* = x_{(S - x_n^*P_n - x_{n-1}^*P_{n-1} - \dots - x_{j+1}^*P_{j+1})j}^0, \quad j = \overline{n-1, 1}. \\
+     & x_6^* = x_{14, 6}^0 = 0,                                                                                  \\
+     & x_5^* = x_{(14 - 0 \cdot 6)5}^0 = x_{14, 5}^0 = 0,                                                        \\
+     & x_4^* = x_{(14 - 0 \cdot 6 - 0 \cdot 3)4}^0 = x_{14, 4}^0 = 0,                                            \\
+     & x_3^* = x_{(14 - 0 \cdot 6 - 0 \cdot 3 - 0 \cdot 5)3}^0 = x_{14, 3}^0 = 0,                                \\
+     & x_2^* = x_{(14 - 0 \cdot 6 - 0 \cdot 3 - 0 \cdot 5 - 0 \cdot 4)2}^0 = x_{14, 2}^0 = 0,                    \\
+     & x_1^* = x_{(14 - 0 \cdot 6 - 0 \cdot 3 - 0 \cdot 5 - 0 \cdot 4 - 0 \cdot 3)1}^0 = x_{14, 1}^0 = 7.
+\end{align*}
+
+Таким образом оптимально распределение ресурсов: $X^* = \begin{pmatrix} 7 & 0 & 0 & 0 & 0 & 0 \end{pmatrix}$, а максимальное значение целевой функции: $W^* = W_{\max} = 42$.
+
+Проверим по изначальной таблице:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\columncolor{lightgray}}c|c|c|c|c|c|c|c|}
+        \hline \rowcolor{lightgray}
+        $F$      & 1  & 2 & 3 & 4  & 5 & 6  & $\sum$     \\
+        \hline
+        $P_j$    & 2  & 3 & 4 & 5  & 3 & 6  &            \\
+        \hline
+        $V_j$    & 6  & 8 & 7 & 10 & 9 & 12 &            \\
+        \hline
+        $x^*$    & 7  & 0 & 0 & 0  & 0 & 0  &            \\
+        \hline
+        $P_jx^*$ & 14 & 0 & 0 & 0  & 0 & 0  & $14 = S$   \\
+        \hline
+        $V_jx^*$ & 42 & 0 & 0 & 0  & 0 & 0  & $42 = W^*$ \\
+        \hline
+    \end{tabular}
+\end{table}
+
+В конце приведём сравнение с программным решением (код можно найти \href{https://github.com/retrobannerS/optimization_methods/blob/main/python/10-lab/knapsack.ipynb}{здесь}) задачи о рюкзаке:
+
+\begin{longtable}[]{@{}lllllll@{}}
+    \toprule\noalign{}
+    items    & 1 & 2 & 3 & 4 & 5 & 6 \\
+    \midrule\noalign{}
+    \endhead
+    \bottomrule\noalign{}
+    \endlastfoot
+    quantity & 7 & 0 & 0 & 0 & 0 & 0 \\
+\end{longtable}
+\begin{lstlisting}[language=text]
+    total = 42
+\end{lstlisting}
+
+\textbf{Ответ:} Количества взятых предметов: $X^* = \begin{pmatrix} 7 & 0 & 0 & 0 & 0 & 0 \end{pmatrix}$, максимальная стоимость взятых предметов: $W^* = 42$.\label{10-lab-answer}
